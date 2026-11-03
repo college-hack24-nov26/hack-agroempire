@@ -1,0 +1,55 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | Krushi Drishti</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="auth-body">
+
+<div class="auth-card">
+    <div class="auth-logo">🌱</div>
+    <h1>Join Krushi Drishti</h1>
+    <p class="auth-subtitle">Create Your Farmer Account</p>
+
+    <form id="registerForm">
+        <label>Full Name</label>
+        <input type="text" id="regName"
+               placeholder="Enter your full name" required>
+
+        <label>Email Address</label>
+        <input type="email" id="regEmail"
+               placeholder="Enter your email" required>
+
+        <label>Mobile Number</label>
+        <input type="tel" id="regPhone"
+               placeholder="Enter mobile number"
+               pattern="[0-9]{10}" required>
+
+        <label>Password</label>
+        <input type="password" id="regPassword"
+               placeholder="Create password" minlength="6" required>
+
+        <label>Village / Location</label>
+        <input type="text" id="regVillage"
+               placeholder="Enter your village" required>
+
+        <button type="submit" class="auth-btn">
+            Create Account
+        </button>
+    </form>
+
+    <p class="auth-switch">
+        Already have an account?
+        <a href="login.html">Login</a>
+    </p>
+    <a href="index.html" class="back-link">&larr; Back to Home</a>
+</div>
+
+<script src="js/auth.js"></script>
+</body>
+</html>
+
+

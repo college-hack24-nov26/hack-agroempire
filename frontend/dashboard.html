@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmer Dashboard | Krushi Drishti</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="dashboard-body">
+
+<header class="dashboard-header">
+    <h2>🌱 Krushi Drishti</h2>
+    <div style="display: flex; gap: 10px; align-items: center;">
+        <span id="backendStatusPill" style="font-size: 0.8rem; background: #dcfce7; color: #166534; padding: 4px 10px; border-radius: 9999px; font-weight: 600;">Firebase RTDB Connected</span>
+        <button id="logoutBtn" class="logout-btn">Logout</button>
+    </div>
+</header>
+
+<main class="dashboard-container">
+    <section class="dashboard-welcome">
+        <p>SMART FARMING • BETTER FUTURE</p>
+        <h1>Welcome, <span id="farmerName">Farmer</span>! 👋</h1>
+        <p>Your farm, your health, your future.</p>
+    </section>
+
+    <section class="dashboard-grid">
+        <a href="disease-detection.html" class="dashboard-card">
+            <div>🌿</div>
+            <h3>Crop Disease Detection</h3>
+            <p>Upload a crop image to start an analysis.</p>
+        </a>
+
+        <a href="index.html#community" class="dashboard-card">
+            <div>🔔</div>
+            <h3>Nearby Farm Alerts</h3>
+            <p>View community disease reports.</p>
+        </a>
+
+        <a href="index.html#weather" class="dashboard-card">
+            <div>🌦️</div>
+            <h3>Weather Information</h3>
+            <p>Check farming weather updates.</p>
+        </a>
+
+        <a href="index.html#community" class="dashboard-card">
+            <div>📋</div>
+            <h3>My Reports</h3>
+            <p>Go to the community report section.</p>
+        </a>
+    </section>
+
+    <section class="dashboard-profile">
+        <h2>👨‍🌾 Farmer Profile</h2>
+        <p><strong>Name:</strong> <span id="profileName">-</span></p>
+        <p><strong>Email:</strong> <span id="profileEmail">-</span></p>
+        <p><strong>Mobile:</strong> <span id="profilePhone">-</span></p>
+        <p><strong>Village:</strong> <span id="profileVillage">-</span></p>
+        <p><strong>State:</strong> <span id="profileState">Maharashtra</span></p>
+    </section>
+</main>
+
+<script src="js/dashboard.js"></script>
+</body>
+</html>

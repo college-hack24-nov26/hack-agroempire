@@ -1,0 +1,32 @@
+{
+  "name": "krushi-drishti-backend",
+  "version": "1.0.0",
+  "description": "AI-Powered Smart Agriculture Backend with Firebase Realtime Database for Krushi Drushti",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "seed": "node src/scripts/seed.js",
+    "test": "node --test tests/*.test.js"
+  },
+  "keywords": [
+    "agriculture",
+    "agritech",
+    "krushi-drishti",
+    "firebase",
+    "realtime-database",
+    "crop-disease-detection",
+    "mandi-apmc",
+    "weather-advisory",
+    "iot-telemetry"
+  ],
+  "author": "Krushi Drushti Autonomous Engineering Team",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "multer": "^2.5.0"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "rules": {
+    ".read": true,
+    ".write": true,
+    "users": {
+      ".indexOn": ["phone", "district", "state"]
+    },
+    "crops": {
+      ".indexOn": ["category", "season"]
+    },
+    "diagnostics": {
+      ".indexOn": ["farmerId", "crop", "severity", "timestamp"]
+    },
+    "mandi_prices": {
+      ".indexOn": ["commodity", "state", "district", "market", "arrivalDate"]
+    },
+    "weather_advisories": {
+      ".indexOn": ["district", "state", "timestamp"]
+    },
+    "community": {
+      ".indexOn": ["category", "timestamp", "authorId", "likesCount"]
+    },
+    "schemes": {
+      ".indexOn": ["category", "targetAudience"]
+    },
+    "sensor_telemetry": {
+      ".indexOn": ["farmerId", "deviceId", "timestamp"]
+    },
+    "system": {
+      ".read": true,
+      ".write": true
+    }
+  }
+}
+

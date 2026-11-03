@@ -1,0 +1,5 @@
+{
+  "name": "best-practices",
+  "description": "BEST Engineering Framework enforcing Boundary defense, Explicit architecture, Security-first development, and Test-driven verification.",
+  "version": "1.0.0"
+}

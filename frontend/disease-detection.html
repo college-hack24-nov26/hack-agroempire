@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crop Disease Detection | Krushi Drishti</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .botanical-pill {
+            background: #dcfce7;
+            color: #166534;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            display: inline-block;
+        }
+        .treatment-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 14px;
+            margin-top: 10px;
+            text-align: left;
+        }
+        .treatment-card h4 {
+            color: #059669;
+            margin-bottom: 4px;
+            font-size: 0.95rem;
+        }
+        .treatment-card p {
+            color: #334155;
+            font-size: 0.88rem;
+            line-height: 1.5;
+        }
+        .severity-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 9999px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            margin-left: 8px;
+        }
+        .severity-HIGH, .severity-CRITICAL {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+        .severity-MODERATE {
+            background: #fef3c7;
+            color: #b45309;
+        }
+        .severity-LOW, .severity-HEALTHY {
+            background: #dcfce7;
+            color: #15803d;
+        }
+    </style>
+</head>
+<body class="disease-page">
+
+<header class="disease-header">
+    <h2>🌱 Krushi Drishti</h2>
+    <div style="display: flex; gap: 12px; align-items: center;">
+        <span id="plantnetStatusPill" style="font-size: 0.78rem; background: #dcfce7; color: #166534; padding: 4px 10px; border-radius: 9999px; font-weight: 600;">🌿 Pl@ntNet AI Vision Active</span>
+        <a href="dashboard.html" style="color: #234d32; text-decoration: none; font-weight: 600;">← Dashboard</a>
+    </div>
+</header>
+
+<main class="disease-container">
+
+    <section class="disease-heading">
+        <p>SMART CROP HEALTH • POWERED BY PL@NTNET AI</p>
+        <h1>Crop Disease Detection 🌿</h1>
+        <p>Take a leaf photo or upload from gallery to detect plant disease and receive verified treatment prescriptions.</p>
+    </section>
+
+    <section class="disease-panel">
+
+        <div class="upload-options">
+            <div class="upload-option" id="openCamera">
+                <span>📷</span>
+                <h3>Take Photo</h3>
+                <p>Open Camera</p>
+            </div>
+
+            <label for="galleryInput" class="upload-option">
+                <span>🖼️</span>
+                <h3>Upload Photo</h3>
+                <p>Choose from Gallery</p>
+            </label>
+        </div>
+
+        <input type="file" id="galleryInput" accept="image/*" hidden>
+
+        <div id="cameraBox" style="display:none; text-align:center;">
+            <video id="cameraVideo" autoplay playsinline
+                   style="width:100%; max-width:400px; border-radius:12px; border: 2px solid #234d32;">
+            </video>
+            <br><br>
+            <button type="button" id="capturePhoto" class="auth-btn" style="width: auto; padding: 10px 20px;">Capture Photo</button>
+            <button type="button" id="closeCamera" style="padding: 10px 18px; border-radius: 8px; border: 1px solid #ccc; background: #fff; cursor: pointer;">Close Camera</button>
+        </div>
+
+        <canvas id="cameraCanvas" style="display:none;"></canvas>
+
+        <div class="preview-box">
+            <img id="cropPreview" alt="Selected crop image" style="display:none; max-width: 100%; max-height: 280px; margin: 0 auto; border-radius: 10px;">
+            <p id="previewMessage">Your selected crop image will appear here.</p>
+
+            <div id="imageActions" style="display:none; justify-content: center; gap: 10px; margin-top: 10px;">
+                <button type="button" id="changeImageBtn" style="padding: 8px 14px; border-radius: 6px; border: 1px solid #cbd5e1; background: #f8fafc; cursor: pointer;">🔄 Change Image</button>
+                <button type="button" id="removeImageBtn" style="padding: 8px 14px; border-radius: 6px; border: 1px solid #cbd5e1; background: #fee2e2; color: #b91c1c; cursor: pointer;">🗑️ Remove</button>
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 12px; margin-top: 15px; flex-wrap: wrap;">
+            <div style="flex: 1; min-width: 160px;">
+                <label for="cropType" style="font-weight: 600; font-size: 0.9rem;">Select Crop (Optional)</label>
+                <select id="cropType" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ccc; margin-top: 5px;">
+                    <option value="">Auto-Detect via Pl@ntNet</option>
+                    <option value="Tomato">Tomato (टोमॅटो)</option>
+                    <option value="Onion">Onion (कांदा)</option>
+                    <option value="Cotton">Cotton (कापूस)</option>
+                    <option value="Soybean">Soybean (सोयाबीन)</option>
+                    <option value="Wheat">Wheat (गहू)</option>
+                    <option value="Rice">Rice (भात)</option>
+                </select>
+            </div>
+
+            <div style="flex: 1; min-width: 160px;">
+                <label for="advisoryLang" style="font-weight: 600; font-size: 0.9rem;">Advisory Language (सल्ला भाषा)</label>
+                <select id="advisoryLang" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ccc; margin-top: 5px;">
+                    <option value="mr" selected>मराठी (Marathi)</option>
+                    <option value="hi">हिंदी (Hindi)</option>
+                    <option value="en">English</option>
+                </select>
+            </div>
+        </div>
+
+        <button id="analyzeCropBtn" class="analyze-btn" style="margin-top: 20px;">
+            🔬 Analyze Crop with Pl@ntNet AI
+        </button>
+
+        <div id="analysisResult" class="analysis-result" style="display:none; margin-top: 25px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h3 id="resultTitle" style="color: #234d32; margin: 0;">🌱 AI Diagnosis Result</h3>
+                <span id="severityBadge" class="severity-badge">HIGH</span>
+            </div>
+
+            <div id="botanicalInfo" class="botanical-pill" style="display:none;"></div>
+
+            <p id="resultText" style="font-size: 1.05rem; font-weight: 600; margin-top: 12px; color: #0f172a;"></p>
+
+            <div id="treatmentDetails" style="margin-top: 15px;"></div>
+
+            <p id="resultNote" style="font-size: 0.78rem; color: #64748b; margin-top: 15px;">
+                Verified diagnosis saved to Firebase RTDB under your farmer record.
+            </p>
+        </div>
+
+    </section>
+
+</main>
+
+<script src="js/disease.js"></script>
+</body>
+</html>

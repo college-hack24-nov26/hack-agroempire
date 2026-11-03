@@ -1,0 +1,10 @@
+{
+  "hooks": {
+    "post_tool_execution": [
+      {
+        "matcher": "replace_file_content|write_to_file",
+        "description": "Auto-validate syntax and formatting after editing files."
+      }
+    ]
+  }
+}
