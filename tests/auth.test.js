@@ -101,3 +101,4 @@ test('Farmer Authentication & Firebase RTDB Integration', async (t) => {
     assert.ok(body.error.message.includes('Invalid password'));
   });
 });
+
