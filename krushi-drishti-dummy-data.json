@@ -1,0 +1,156 @@
+{
+  "reports": {
+    "report_001": {
+      "id": "report_001",
+      "farmer": "Ramesh Patil",
+      "crop": "Tomato",
+      "disease": "Late Blight (Phytophthora infestans)",
+      "village": "Nashik (Dindori Road)",
+      "radius": "5",
+      "date": "03/11/2026",
+      "status": "High Alert - Community Verified",
+      "timestamp": 1793706500000,
+      "notes": "Dark water-soaked spots spreading rapidly on lower leaves after recent rainfall."
+    },
+    "report_002": {
+      "id": "report_002",
+      "farmer": "Sunita Deshmukh",
+      "crop": "Cotton",
+      "disease": "Cotton Leaf Curl Virus (CLCuV)",
+      "village": "Akola (Murtizapur)",
+      "radius": "10",
+      "date": "03/11/2026",
+      "status": "Active Outbreak Warning",
+      "timestamp": 1793703200000,
+      "notes": "Upward curling and vein thickening observed across 3 adjacent acres. Whitefly population rising."
+    },
+    "report_003": {
+      "id": "report_003",
+      "farmer": "Tukaram Shinde",
+      "crop": "Soybean",
+      "disease": "Soybean Rust (Phakopsora pachyrhizi)",
+      "village": "Kolhapur (Shirol)",
+      "radius": "5",
+      "date": "02/11/2026",
+      "status": "Advisory Issued",
+      "timestamp": 1793620000000,
+      "notes": "Reddish-brown pustules found under leaf surface. Advised preventive fungicide spray."
+    },
+    "report_004": {
+      "id": "report_004",
+      "farmer": "Anand Jadhav",
+      "crop": "Rice",
+      "disease": "Rice Blast (Magnaporthe oryzae)",
+      "village": "Raigad (Alibaug)",
+      "radius": "2",
+      "date": "02/11/2026",
+      "status": "Contained Alert",
+      "timestamp": 1793580000000,
+      "notes": "Spindle-shaped lesions noticed on younger seedlings. Spraying Tricyclazole in progress."
+    },
+    "report_005": {
+      "id": "report_005",
+      "farmer": "Balasaheb Pawar",
+      "crop": "Onion",
+      "disease": "Purple Blotch (Alternaria porri)",
+      "village": "Lasalgaon (Niphad)",
+      "radius": "5",
+      "date": "01/11/2026",
+      "status": "Community Warning",
+      "timestamp": 1793500000000,
+      "notes": "Purple sunken lesions on flower stalks and older leaves following humid morning fog."
+    },
+    "report_006": {
+      "id": "report_006",
+      "farmer": "Vikas Ghorpade",
+      "crop": "Grapes",
+      "disease": "Downy Mildew (Plasmopara viticola)",
+      "village": "Sangli (Tasgaon)",
+      "radius": "5",
+      "date": "01/11/2026",
+      "status": "Preventive Action Required",
+      "timestamp": 1793460000000,
+      "notes": "Yellow oil spots on grape leaves with white downy growth on the underside."
+    }
+  },
+  "scans": {
+    "scan_001": {
+      "id": "scan_001",
+      "crop": "Tomato",
+      "disease": "Tomato Early Blight",
+      "severity": "Moderate",
+      "advice": "Spray Mancozeb (2g/L) or Copper Oxychloride. Avoid overhead watering.",
+      "farmerName": "Ramesh Patil",
+      "village": "Nashik",
+      "farmerUid": "demo_farmer_01",
+      "date": "03/11/2026",
+      "timestamp": 1793706000000
+    },
+    "scan_002": {
+      "id": "scan_002",
+      "crop": "Cotton",
+      "disease": "Bacterial Blight / Angular Leaf Spot",
+      "severity": "Moderate",
+      "advice": "Spray Streptocycline (1g/10L) + Copper Oxychloride (30g/10L).",
+      "farmerName": "Sunita Deshmukh",
+      "village": "Akola",
+      "farmerUid": "demo_farmer_02",
+      "date": "03/11/2026",
+      "timestamp": 1793701000000
+    },
+    "scan_003": {
+      "id": "scan_003",
+      "crop": "Soybean",
+      "disease": "Yellow Mosaic Virus",
+      "severity": "High",
+      "advice": "Control whitefly vectors using yellow sticky traps and systemic insecticide spray.",
+      "farmerName": "Tukaram Shinde",
+      "village": "Kolhapur",
+      "farmerUid": "demo_farmer_03",
+      "date": "02/11/2026",
+      "timestamp": 1793610000000
+    },
+    "scan_004": {
+      "id": "scan_004",
+      "crop": "Rice",
+      "disease": "Healthy Rice Plant",
+      "severity": "None",
+      "advice": "No disease lesions detected. Keep water level optimal and continue standard fertilization.",
+      "farmerName": "Anand Jadhav",
+      "village": "Raigad",
+      "farmerUid": "demo_farmer_04",
+      "date": "01/11/2026",
+      "timestamp": 1793520000000
+    }
+  },
+  "users": {
+    "demo_farmer_01": {
+      "uid": "demo_farmer_01",
+      "name": "Ramesh Patil",
+      "email": "ramesh.patil@krushi.com",
+      "phone": "9876543210",
+      "village": "Nashik",
+      "role": "farmer",
+      "createdAt": 1793400000000
+    },
+    "demo_farmer_02": {
+      "uid": "demo_farmer_02",
+      "name": "Sunita Deshmukh",
+      "email": "sunita.deshmukh@krushi.com",
+      "phone": "9823456789",
+      "village": "Akola",
+      "role": "farmer",
+      "createdAt": 1793410000000
+    },
+    "demo_farmer_03": {
+      "uid": "demo_farmer_03",
+      "name": "Tukaram Shinde",
+      "email": "tukaram.shinde@krushi.com",
+      "phone": "9765432109",
+      "village": "Kolhapur",
+      "role": "farmer",
+      "createdAt": 1793420000000
+    }
+  }
+}
+

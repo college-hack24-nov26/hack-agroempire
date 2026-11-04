@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crop Disease Detection | Krushi Drishti</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="disease-page">
+
+    <header class="disease-header">
+        <h2>🌱 Krushi Drishti</h2>
+        <div style="display:flex; gap:14px; align-items:center;">
+            <a href="dashboard.html" style="color:white; text-decoration:none;">← Dashboard</a>
+            <a href="index.html" style="color:white; text-decoration:none;">Home</a>
+        </div>
+    </header>
+
+    <main class="disease-container">
+
+        <section class="disease-heading">
+            <p>SMART CROP HEALTH</p>
+            <h1>Crop Disease Detection 🌿</h1>
+            <p>Upload your crop leaf image to identify botanical features with Pl@ntNet AI & get smart remedies.</p>
+        </section>
+
+        <section class="disease-panel">
+
+            <div class="upload-options">
+                <div class="upload-option" id="openCamera" style="cursor:pointer;">
+                    <span>📷</span>
+                    <h3>Take Photo</h3>
+                    <p>Open Camera</p>
+                </div>
+
+                <label for="galleryInput" class="upload-option" style="cursor:pointer;">
+                    <span>🖼️</span>
+                    <h3>Upload Photo</h3>
+                    <p>Choose from Gallery</p>
+                </label>
+            </div>
+
+            <input type="file" id="galleryInput" accept="image/*" hidden>
+
+            <div id="cameraBox" style="display:none; text-align:center; margin: 15px 0;">
+                <video id="cameraVideo" autoplay playsinline
+                    style="width:100%; max-width:400px; border-radius:12px; background:#000;">
+                </video>
+                <br><br>
+                <button type="button" id="capturePhoto" class="btn-primary"
+                    style="padding:10px 18px; margin-right:8px;">📸 Capture Photo</button>
+                <button type="button" id="closeCamera" class="btn-outline" style="padding:10px 18px;">Close
+                    Camera</button>
+            </div>
+
+            <canvas id="cameraCanvas" style="display:none;"></canvas>
+
+            <div class="preview-box">
+                <img id="cropPreview" alt="Selected crop leaf image"
+                    style="display:none; max-width:100%; border-radius:12px; margin:auto;">
+
+                <p id="previewMessage">
+                    Your selected crop leaf image will appear here.
+                </p>
+
+                <div id="imageActions" style="display:none;">
+                    <button type="button" id="changeImageBtn">🔄 Change Image</button>
+                    <button type="button" id="removeImageBtn">🗑️ Remove Image</button>
+                </div>
+            </div>
+
+            <label for="cropType" style="margin-top:20px; display:block; font-weight:600; color:#205b39;">Select
+                Crop</label>
+            <select id="cropType"
+                style="width:100%; padding:12px; border:1px solid #d5dfd2; border-radius:9px; margin-bottom:15px; font-size:15px;">
+                <option value="">Choose your crop</option>
+                <option value="Tomato">Tomato</option>
+                <option value="Cotton">Cotton</option>
+                <option value="Rice">Rice</option>
+                <option value="Soybean">Soybean</option>
+                <option value="Wheat">Wheat</option>
+                <option value="Grapes">Grapes</option>
+                <option value="Onion">Onion</option>
+                <option value="Other">Other</option>
+            </select>
+
+            <button id="analyzeCropBtn" class="analyze-btn"
+                style="width:100%; padding:14px; background:#287347; color:white; border:none; border-radius:9px; font-size:16px; font-weight:bold; cursor:pointer;">
+                🔬 Analyze with Pl@ntNet AI →
+            </button>
+
+            <div id="analysisLoading"
+                style="display:none; text-align:center; padding:15px; color:#205b39; font-weight:600;">
+                🔍 Scanning leaf features with Pl@ntNet AI engine...
+            </div>
+
+            <div id="analysisResult" class="analysis-result" style="display:none; margin-top:22px;">
+                <h3 style="color:#205b39; font-size:18px; margin-bottom:12px;">🌱 AI Crop Health Report</h3>
+                <div id="resultText" style="margin:8px 0;"></div>
+                <div id="resultAdvice" style="margin:8px 0; color:#3b5243; line-height:1.5;"></div>
+                <div id="saveStatus" style="font-size:13px; color:#287347; margin-top:12px;"></div>
+
+                <div style="margin-top:16px;">
+                    <button id="reportToCommunityBtn" type="button"
+                        style="padding:10px 16px; background:#e06a3b; color:white; border:none; border-radius:8px; cursor:pointer; font-weight:bold; font-size:14px;">
+                        📢 Share as Community Alert
+                    </button>
+                </div>
+            </div>
+
+            <!-- Recent Scans History from Firebase RTDB -->
+            <div id="recentScansSection" style="margin-top:35px; border-top:1px solid #e0e8db; padding-top:20px;">
+                <h3 style="color:#205b39; font-size:18px; margin-bottom:12px;">📋 Your Recent Scans (Firebase RTDB)</h3>
+                <div id="scansList">
+                    <p style="color:#71806f; font-size:14px;">Loading scan history...</p>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics-compat.js"></script>
+
+    <!-- App Firebase Config & Disease Detection Logic -->
+    <script src="js/firebase-config.js"></script>
+    <script src="js/alerts.js"></script>
+    <script src="js/disease.js"></script>
+</body>
+
+</html>

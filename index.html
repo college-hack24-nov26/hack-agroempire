@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#234d32">
+
+    <title>Krushi Drishti | Smart Agriculture</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700;800&display=swap"
+        rel="stylesheet">
+    <!-- Firebase SDKs (10.12.0 compat) -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics-compat.js"></script>
+
+    <!-- Your config & initialization -->
+    <script src="js/firebase-config.js"></script>
+
+    <!-- Auth / UI logic -->
+
+</head>
+
+<body>
+    <!-- Splash Screen -->
+    <div id="splash-screen">
+        <div class="splash-logo">
+            <div class="logo-icon">🌱</div>
+            <h1>Krushi Drishti</h1>
+            <p>Smart Farming • Better Future</p>
+            <div class="loading-line"></div>
+        </div>
+    </div>
+
+    <!-- NAVIGATION -->
+    <header class="navbar">
+        <a href="#home" class="brand">
+            <span class="brand-icon">🌾</span>
+            <span>Krushi <b>Drishti</b></span>
+        </a>
+
+        <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+            ☰
+        </button>
+
+        <nav class="nav-links" id="navLinks">
+            <a href="#home" class="nav-link active">Home</a>
+            <a href="#services" class="nav-link">Services</a>
+            <a href="#detect" class="nav-link">Disease Detection</a>
+            <a href="#community" class="nav-link">Community Alert</a>
+            <a href="#weather" class="nav-link">Weather Forecast</a>
+            <a href="#about" class="nav-link">About</a>
+        </nav>
+
+        <div style="display:flex; align-items:center; gap:10px;">
+            <!-- Notification Bell Icon on Homepage (Logged-in farmers) -->
+            <div class="dashboard-bell-container" id="homeBellContainer" style="display:none;">
+                <button class="dashboard-bell-btn" id="homeBellBtn" title="Village Crop Disease Alerts" aria-label="Notifications" style="background:#205b39; border-color:#1b4d30; width:38px; height:38px; font-size:17px;">
+                    🔔
+                    <span class="dashboard-badge-count" id="homeNotifBadge">0</span>
+                </button>
+                <div class="dashboard-notif-dropdown" id="homeNotifDropdown">
+                    <div class="dashboard-notif-header">
+                        <h4>🔔 Village Disease Alerts</h4>
+                        <a href="dashboard.html#notificationsHistory" style="font-size:12px; color:#205b39; font-weight:600; text-decoration:underline;">View All</a>
+                    </div>
+                    <ul class="dashboard-notif-list" id="homeNotifList">
+                        <li class="dashboard-notif-empty">No disease alerts for your village.</li>
+                    </ul>
+                </div>
+            </div>
+            <a href="dashboard.html" id="navDashboardLink" class="nav-cta" style="display:none; background:#205b39; color:white;">Dashboard 👨‍🌾</a>
+            <a href="login.html" id="navLoginLink" class="nav-cta">Login / Register ↗</a>
+        </div>
+    </header>
+
+    <main>
+
+        <!-- HERO SECTION -->
+        <section class="hero" id="home">
+            <div class="hero-overlay"></div>
+
+            <div class="hero-content">
+                <div class="eyebrow">
+                    <span class="live-dot"></span>
+                    SMART AGRICULTURE FOR EVERY FARMER
+                </div>
+
+                <h1>
+                    Growing a Better<br>
+                    <span>Tomorrow,</span><br>
+                    Naturally.
+                </h1>
+
+                <p>
+                    Discover smarter farming with AI-powered crop
+                    disease detection, community alerts and
+                    intelligent agricultural solutions.
+                </p>
+
+                <div class="hero-buttons">
+                    <a href="#detect" class="btn-primary">
+                        Explore Disease Detection ↗
+                    </a>
+
+                    <a href="#about" class="btn-outline">
+                        Discover More
+                    </a>
+                </div>
+
+                <div class="hero-stats">
+                    <div>
+                        <h3>AI</h3>
+                        <p>Smart Detection</p>
+                    </div>
+                    <div>
+                        <h3>24/7</h3>
+                        <p>Farmer Support</p>
+                    </div>
+                    <div>
+                        <h3>🌱</h3>
+                        <p>Healthy Farming</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hero-caption">
+                <span>01 / FARMING WITH TECHNOLOGY</span>
+                <span>Rooted in Nature. Powered by Innovation.</span>
+            </div>
+        </section>
+
+        <!-- WELCOME SECTION -->
+        <section class="welcome section" id="dashboard">
+            <div class="section-heading">
+                <span class="section-label">YOUR FARMING COMPANION</span>
+                <h2>Welcome to <span>Krushi Drishti</span></h2>
+                <p>
+                    Technology and nature together for a healthier
+                    and more productive farming future.
+                </p>
+            </div>
+
+            <div class="welcome-grid">
+                <div class="welcome-card welcome-image">
+                    <div class="welcome-image-text">
+                        <span class="small-tag">OUR MISSION</span>
+                        <h3>Empowering Farmers.<br>Protecting Every Crop.</h3>
+                        <p>Helping farmers make informed decisions.</p>
+                    </div>
+                </div>
+
+                <div class="welcome-card welcome-info">
+                    <span class="card-icon">🌿</span>
+                    <h3>Smart Farming Starts Here</h3>
+                    <p>
+                        Identify crop diseases, receive nearby
+                        disease alerts and access useful farming
+                        information in one place.
+                    </p>
+                    <a href="#services" class="text-link">Explore Features →</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- SERVICES -->
+        <section class="services section" id="services">
+            <div class="section-heading">
+                <span class="section-label">WHAT WE OFFER</span>
+                <h2>Smart Solutions for <span>Smart Farmers</span></h2>
+                <p>Everything your farm needs to grow better.</p>
+            </div>
+
+            <div class="service-grid">
+
+                <article class="service-card">
+                    <div class="service-icon">📸</div>
+                    <span class="service-number">01</span>
+                    <h3>Crop Disease Detection</h3>
+                    <p>
+                        Upload a crop leaf image and get AI-based
+                        disease analysis.
+                    </p>
+                    <a href="#detect">Explore Feature →</a>
+                </article>
+
+                <article class="service-card featured-card">
+                    <div class="service-icon">🔔</div>
+                    <span class="service-number">02</span>
+                    <h3>Krushi Community Alert</h3>
+                    <p>
+                        Receive warnings about reported crop
+                        diseases in nearby farming areas.
+                    </p>
+                    <a href="#community">Explore Feature →</a>
+                </article>
+
+                <article class="service-card">
+                    <div class="service-icon">🌦️</div>
+                    <span class="service-number">03</span>
+                    <h3>Weather Updates</h3>
+                    <p>
+                        Stay informed about weather conditions
+                        and farming precautions.
+                    </p>
+                    <a href="#weather">Explore Feature →</a>
+                </article>
+
+                <article class="service-card">
+                    <div class="service-icon">🌱</div>
+                    <span class="service-number">04</span>
+                    <h3>Farming Tips</h3>
+                    <p>
+                        Explore useful information about
+                        crop care and prevention.
+                    </p>
+                    <a href="#tips">Explore Feature →</a>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- DISEASE DETECTION -->
+        <section class="detection section" id="detect">
+            <div class="section-heading">
+                <span class="section-label">AI POWERED TECHNOLOGY • PL@NTNET ENGINE</span>
+                <h2>Detect. Protect. <span>Grow.</span></h2>
+                <p>
+                    Upload your crop leaf image to identify botanical features with Pl@ntNet AI & get smart remedies.
+                </p>
+            </div>
+
+            <div class="detection-layout">
+
+                <div class="detection-image">
+                    <img src="https://images.unsplash.com/photo-1492496913980-501348b61469?w=900"
+                        alt="Healthy green plants">
+
+                    <div class="image-note">
+                        <span>🌿</span>
+                        Healthy crops, happy farmers.
+                    </div>
+                </div>
+
+                <div class="detection-panel">
+                    <div class="panel-heading">
+                        <span class="panel-icon">🔬</span>
+                        <div>
+                            <h3>Pl@ntNet Crop Health Scanner</h3>
+                            <p>Upload your crop leaf image below</p>
+                        </div>
+                    </div>
+
+                    <p id="scanLoginNotice" style="
+                        display:block;
+                        background:#fff4df;
+                        color:#946200;
+                        padding:12px;
+                        border-radius:8px;
+                        font-size:14px;
+                        margin:15px 0;
+                    ">
+                        🔒 Please login to use the Crop Disease Scanner.
+                    </p>
+
+                    <label for="cropImage" class="upload-area" id="uploadArea">
+                        <div id="uploadPlaceholder">
+                            <span class="upload-icon">📷</span>
+                            <h3>Drop your crop image here</h3>
+                            <p>Or click to browse your device</p>
+                            <small>JPG, PNG or WEBP • Max 10 MB</small>
+                        </div>
+
+                        <img id="imagePreview" alt="Crop image preview">
+                    </label>
+
+                    <input type="file" id="cropImage" accept="image/jpeg,image/png,image/webp" hidden>
+
+                    <div class="upload-actions">
+                        <button class="btn-primary" id="chooseBtn">
+                            Choose Image
+                        </button>
+
+                        <button class="btn-secondary" id="cameraBtn">
+                            📷 Camera
+                        </button>
+
+                        <input type="file" id="cameraImage" accept="image/*" capture="environment" hidden>
+                    </div>
+
+                    <div style="margin-top:14px; text-align:left;">
+                        <label for="cropSelectHome" style="font-weight:600; color:#205b39; font-size:13px; display:block; margin-bottom:5px;">Select Crop (Optional / Auto-Detect)</label>
+                        <select id="cropSelectHome" style="width:100%; padding:10px 12px; border:1px solid #d5dfd2; border-radius:8px; font-size:14px; background:white;">
+                            <option value="">Auto-Detect via Pl@ntNet AI</option>
+                            <option value="Tomato">Tomato</option>
+                            <option value="Cotton">Cotton</option>
+                            <option value="Rice">Rice</option>
+                            <option value="Soybean">Soybean</option>
+                            <option value="Wheat">Wheat</option>
+                            <option value="Grapes">Grapes</option>
+                            <option value="Onion">Onion</option>
+                            <option value="Other">Other Crop</option>
+                        </select>
+                    </div>
+
+                    <button class="analyze-btn" id="analyzeBtn" disabled>
+                        🔬 Analyze with Pl@ntNet AI →
+                    </button>
+
+                    <p class="privacy-note">
+                        🔒 Powered by Pl@ntNet botanical AI & agricultural expert remedies.
+                    </p>
+
+                    <div id="analysisLoading" style="display:none; text-align:center; padding:15px; color:#205b39; font-weight:600;">
+                        🔍 Scanning leaf features with Pl@ntNet AI engine...
+                    </div>
+
+                    <div id="analysisStatus" class="analysis-status"></div>
+
+                    <div id="analysisResult" class="analysis-result" style="display:none; text-align:left;">
+                        <h3 style="color:#205b39; font-size:18px; margin-bottom:12px;">🌱 AI Crop Health Report</h3>
+                        <div id="resultText" style="margin:8px 0;"></div>
+                        <div id="resultAdvice" style="margin:8px 0; color:#3b5243; line-height:1.5;"></div>
+                        <div id="saveStatus" style="font-size:13px; color:#287347; margin-top:12px;"></div>
+
+                        <div style="margin-top:16px;">
+                            <button id="homeReportToCommunityBtn" type="button"
+                                style="padding:10px 16px; background:#e06a3b; color:white; border:none; border-radius:8px; cursor:pointer; font-weight:bold; font-size:14px;">
+                                📢 Share as Community Alert
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- COMMUNITY ALERT -->
+        <section class="community section" id="community">
+            <div class="community-heading">
+                <div>
+                    <span class="section-label">FARMERS HELPING FARMERS</span>
+                    <h2>One Community.<br><span>One Healthy Future.</span></h2>
+                    <p>
+                        Get notified about possible crop disease
+                        reports in your neighbouring farms.
+                    </p>
+                </div>
+
+                <div class="community-illustration">🌾</div>
+            </div>
+
+            <div class="community-grid">
+
+                <div class="report-panel">
+                    <h3>📢 Report a Crop Disease</h3>
+                    <p>Help nearby farmers stay informed.</p>
+
+                    <form id="reportForm">
+
+                        <label for="farmerName">Farmer Name</label>
+                        <input type="text" id="farmerName" placeholder="Enter your name" required>
+
+                        <label for="cropName">Crop Name</label>
+                        <select id="cropName" required>
+                            <option value="">Select crop</option>
+                            <option>Tomato</option>
+                            <option>Soybean</option>
+                            <option>Cotton</option>
+                            <option>Rice</option>
+                            <option>Grapes</option>
+                            <option>Onion</option>
+                            <option>Other</option>
+                        </select>
+
+                        <label for="diseaseName">Disease Name</label>
+                        <input type="text" id="diseaseName" placeholder="Enter suspected disease" required>
+
+                        <label for="villageName">Village Name</label>
+                        <input type="text" id="villageName" placeholder="Enter village name" required>
+
+                        <label for="reportPhoto">Crop Image</label>
+                        <input type="file" id="reportPhoto" accept="image/*" required>
+
+                        <button type="submit" class="btn-primary form-submit">
+                            Submit Disease Report ↗
+                        </button>
+                    </form>
+
+                    <p class="form-note">
+                        Reports should be verified before community alerts
+                        are treated as confirmed disease warnings.
+                    </p>
+                </div>
+
+                <div class="alerts-panel">
+                    <div class="alerts-header">
+                        <div>
+                            <span class="section-label">COMMUNITY UPDATES</span>
+                            <h3>Nearby Disease Alerts</h3>
+                        </div>
+                        <span class="alert-count" id="alertCount">0 Reports</span>
+                    </div>
+
+                    <div id="alertList" class="alert-list">
+                        <div class="empty-alert">
+                            <span>🌱</span>
+                            <h3>No reports yet</h3>
+                            <p>Community reports will appear here.</p>
+                        </div>
+                    </div>
+
+                    <div class="alert-footer">
+                        <span>🌍 Community Crop Protection</span>
+                        <span>Stay Informed</span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- WEATHER FORECAST & AGRO-ADVISORIES -->
+        <section class="weather section" id="weather">
+            <div class="section-heading">
+                <span class="section-label">LIVE METEOROLOGICAL &amp; AGRO-ADVISORY ENGINE</span>
+                <h2>Weather Forecast &amp; <span>Farming Advisories</span></h2>
+                <p>Real-time weather tracking, 5-day crop forecasting, and proactive agricultural guidance.</p>
+            </div>
+
+            <!-- Weather Control & Search Bar -->
+            <div class="weather-controls-bar">
+                <form id="weatherSearchForm" class="weather-search-form" onsubmit="event.preventDefault(); window.KrushiWeather && window.KrushiWeather.searchCity();">
+                    <div class="weather-search-input-wrap">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" id="weatherCityInput" placeholder="Enter Village or City (e.g., Pune, Nashik, Baramati...)" autocomplete="off">
+                    </div>
+                    <button type="submit" class="weather-search-btn" id="weatherSearchBtn">
+                        <span>Get Forecast</span>
+                    </button>
+                    <button type="button" class="weather-gps-btn" id="weatherGpsBtn" title="Use Device GPS Location" onclick="window.KrushiWeather && window.KrushiWeather.useGPS();">
+                        <span>📍 GPS</span>
+                    </button>
+                </form>
+
+                <div class="weather-units-toggle">
+                    <button type="button" class="unit-btn active" id="unitCBtn" onclick="window.KrushiWeather && window.KrushiWeather.setUnit('metric');">°C</button>
+                    <button type="button" class="unit-btn" id="unitFBtn" onclick="window.KrushiWeather && window.KrushiWeather.setUnit('imperial');">°F</button>
+                </div>
+            </div>
+
+            <!-- Quick City Selector Chips -->
+            <div class="weather-quick-chips">
+                <span class="chips-label">Popular Farming Hubs:</span>
+                <button type="button" class="weather-chip" onclick="window.KrushiWeather && window.KrushiWeather.quickSearch('Pune,IN')">Pune</button>
+                <button type="button" class="weather-chip" onclick="window.KrushiWeather && window.KrushiWeather.quickSearch('Nashik,IN')">Nashik</button>
+                <button type="button" class="weather-chip" onclick="window.KrushiWeather && window.KrushiWeather.quickSearch('Mumbai,IN')">Mumbai</button>
+                <button type="button" class="weather-chip" onclick="window.KrushiWeather && window.KrushiWeather.quickSearch('Nagpur,IN')">Nagpur</button>
+                <button type="button" class="weather-chip" onclick="window.KrushiWeather && window.KrushiWeather.quickSearch('Solapur,IN')">Solapur</button>
+                <button type="button" class="weather-chip" onclick="window.KrushiWeather && window.KrushiWeather.quickSearch('Kolhapur,IN')">Kolhapur</button>
+                <button type="button" class="weather-chip" onclick="window.KrushiWeather && window.KrushiWeather.quickSearch('Delhi,IN')">Delhi</button>
+            </div>
+
+            <!-- Farmer Village Detection Notice (if logged in) -->
+            <div id="weatherFarmerLocationNotice" class="weather-farmer-badge" style="display:none;">
+                <span class="farmer-loc-icon">👨‍🌾</span>
+                <span id="weatherFarmerLocationText">Showing forecast for your registered village: <b>Pune</b></span>
+            </div>
+
+            <!-- Weather Status / Loading Indicator -->
+            <div id="weatherStatusMsg" class="weather-status-box" style="display:none;">
+                <span class="weather-spinner">⏳</span>
+                <span id="weatherStatusText">Fetching live OpenWeather forecast...</span>
+            </div>
+
+            <!-- Main Weather Layout (Two Columns) -->
+            <div class="weather-dashboard-layout" id="weatherDashboard">
+
+                <!-- Left Column: Current Weather & 5-Day Cards -->
+                <div class="weather-main-panel">
+                    <!-- Current Conditions Hero Card -->
+                    <div class="weather-hero-card">
+                        <div class="hero-top">
+                            <div>
+                                <div class="hero-location-badge">
+                                    <span class="loc-pin">📍</span>
+                                    <h3 id="currentCityName">Pune, IN</h3>
+                                    <span class="hero-tag" id="currentCoords">18.52°N, 73.85°E</span>
+                                </div>
+                                <div class="hero-time" id="currentDateTime">Live Meteorological Feed</div>
+                            </div>
+                            <div class="hero-badge-live">
+                                <span class="live-pulse"></span> LIVE
+                            </div>
+                        </div>
+
+                        <div class="hero-center">
+                            <div class="hero-temp-block">
+                                <span class="hero-temp" id="currentTemp">28°</span>
+                                <div class="hero-condition-details">
+                                    <div class="hero-condition-title" id="currentCondition">Scattered Clouds</div>
+                                    <div class="hero-feels-like" id="currentFeelsLike">Feels like 29°C &bull; Min 25°C / Max 31°C</div>
+                                </div>
+                            </div>
+                            <div class="hero-icon-wrap">
+                                <img id="currentWeatherIcon" src="https://openweathermap.org/img/wn/03d@4x.png" alt="Weather icon">
+                            </div>
+                        </div>
+
+                        <!-- 6 Key Farm Weather Metrics -->
+                        <div class="hero-metrics-grid">
+                            <div class="hero-metric-item">
+                                <span class="m-icon">💧</span>
+                                <div>
+                                    <span class="m-label">Humidity</span>
+                                    <strong class="m-val" id="metricHumidity">46%</strong>
+                                </div>
+                            </div>
+                            <div class="hero-metric-item">
+                                <span class="m-icon">💨</span>
+                                <div>
+                                    <span class="m-label">Wind Speed</span>
+                                    <strong class="m-val" id="metricWind">3.2 m/s</strong>
+                                </div>
+                            </div>
+                            <div class="hero-metric-item">
+                                <span class="m-icon">🧭</span>
+                                <div>
+                                    <span class="m-label">Wind Direction</span>
+                                    <strong class="m-val" id="metricWindDir">East (96°)</strong>
+                                </div>
+                            </div>
+                            <div class="hero-metric-item">
+                                <span class="m-icon">⏱️</span>
+                                <div>
+                                    <span class="m-label">Air Pressure</span>
+                                    <strong class="m-val" id="metricPressure">1017 hPa</strong>
+                                </div>
+                            </div>
+                            <div class="hero-metric-item">
+                                <span class="m-icon">☁️</span>
+                                <div>
+                                    <span class="m-label">Cloud Cover</span>
+                                    <strong class="m-val" id="metricClouds">42%</strong>
+                                </div>
+                            </div>
+                            <div class="hero-metric-item">
+                                <span class="m-icon">🌅</span>
+                                <div>
+                                    <span class="m-label">Sun Times</span>
+                                    <strong class="m-val" id="metricSun">06:15 / 18:05</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 5-Day Forecast Strip -->
+                    <div class="forecast-strip-container">
+                        <div class="forecast-header">
+                            <h4>📅 5-Day Crop Planning Forecast</h4>
+                            <span class="forecast-sub">Aggregated daily highs, lows &amp; rain probability</span>
+                        </div>
+                        <div class="forecast-cards-row" id="forecastCardsRow">
+                            <!-- Populated dynamically by js/weather.js -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Krushi Drishti Smart Agro-Advisories -->
+                <div class="weather-advisory-panel">
+                    <div class="advisory-panel-header">
+                        <div class="advisory-title-wrap">
+                            <span class="advisory-badge-icon">🌾</span>
+                            <div>
+                                <h3>Smart Farming Advisories</h3>
+                                <p>Automated rules based on 5-day weather data</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 4 Specialized Crop Advisories -->
+                    <div class="advisory-cards-list">
+
+                        <!-- 1. Spraying Advisory -->
+                        <div class="agro-advisory-card" id="advCardSpray">
+                            <div class="agro-adv-header">
+                                <span class="agro-adv-icon" id="advIconSpray">✅</span>
+                                <div class="agro-adv-meta">
+                                    <span class="agro-adv-category">CHEMICAL &amp; FOLIAR SPRAYING</span>
+                                    <h4 class="agro-adv-title" id="advTitleSpray">Favorable Spraying Window</h4>
+                                </div>
+                                <span class="agro-status-pill status-good" id="advPillSpray">Optimal</span>
+                            </div>
+                            <p class="agro-adv-text" id="advTextSpray">
+                                Low rain probability and calm wind. Ideal conditions for foliar fertilizer and preventative crop spraying.
+                            </p>
+                        </div>
+
+                        <!-- 2. Irrigation Scheduling -->
+                        <div class="agro-advisory-card" id="advCardIrrigation">
+                            <div class="agro-adv-header">
+                                <span class="agro-adv-icon" id="advIconIrrigation">💧</span>
+                                <div class="agro-adv-meta">
+                                    <span class="agro-adv-category">IRRIGATION MANAGEMENT</span>
+                                    <h4 class="agro-adv-title" id="advTitleIrrigation">Standard Water Schedule</h4>
+                                </div>
+                                <span class="agro-status-pill status-good" id="advPillIrrigation">Normal</span>
+                            </div>
+                            <p class="agro-adv-text" id="advTextIrrigation">
+                                Moderate temperatures and balanced moisture. Maintain regular irrigation cycle suited to your crop's growth stage.
+                            </p>
+                        </div>
+
+                        <!-- 3. Fungal & Pest Incubation Risk -->
+                        <div class="agro-advisory-card" id="advCardDisease">
+                            <div class="agro-adv-header">
+                                <span class="agro-adv-icon" id="advIconDisease">🔬</span>
+                                <div class="agro-adv-meta">
+                                    <span class="agro-adv-category">DISEASE &amp; PEST VULNERABILITY</span>
+                                    <h4 class="agro-adv-title" id="advTitleDisease">Low Fungal Blight Risk</h4>
+                                </div>
+                                <span class="agro-status-pill status-good" id="advPillDisease">Low Risk</span>
+                            </div>
+                            <p class="agro-adv-text" id="advTextDisease">
+                                Relative humidity is within normal limits. Inspect leaf undersides regularly as standard prevention.
+                            </p>
+                        </div>
+
+                        <!-- 4. Field Work & Harvesting Window -->
+                        <div class="agro-advisory-card" id="advCardHarvest">
+                            <div class="agro-adv-header">
+                                <span class="agro-adv-icon" id="advIconHarvest">🚜</span>
+                                <div class="agro-adv-meta">
+                                    <span class="agro-adv-category">FIELD OPERATIONS &amp; HARVEST</span>
+                                    <h4 class="agro-adv-title" id="advTitleHarvest">Clear Field Work Window</h4>
+                                </div>
+                                <span class="agro-status-pill status-good" id="advPillHarvest">Favorable</span>
+                            </div>
+                            <p class="agro-adv-text" id="advTextHarvest">
+                                Dry conditions anticipated over the next 48-72 hours. Favorable period for weeding, soil preparation, and harvesting.
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <!-- OpenWeather Live Attribution -->
+                    <div class="weather-footer-attribution">
+                        <span>Powered by <b>OpenWeatherMap API</b> &bull; Real-time 5-day / 3-hour Meteorological Model</span>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+        <!-- TIPS -->
+        <section class="tips section" id="tips">
+            <div class="section-heading">
+                <span class="section-label">GROW WITH KNOWLEDGE</span>
+                <h2>Simple Tips, <span>Stronger Crops</span></h2>
+            </div>
+
+            <div class="tips-grid">
+                <div class="tip-card">
+                    <span>🌱</span>
+                    <h3>Inspect Regularly</h3>
+                    <p>Check leaves and stems for unusual spots or changes.</p>
+                </div>
+                <div class="tip-card">
+                    <span>💧</span>
+                    <h3>Manage Irrigation</h3>
+                    <p>Avoid excessive moisture and follow crop-specific guidance.</p>
+                </div>
+                <div class="tip-card">
+                    <span>🧑‍🌾</span>
+                    <h3>Seek Expert Advice</h3>
+                    <p>Consult agricultural experts when symptoms appear.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ABOUT -->
+        <section class="about section" id="about">
+            <div class="about-photo">
+                <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=900"
+                    alt="Beautiful agricultural landscape">
+            </div>
+
+            <div class="about-content">
+                <span class="section-label">ABOUT OUR PROJECT</span>
+                <h2>Technology Rooted in <span>Nature.</span></h2>
+                <p>
+                    Krushi Drishti is a smart agriculture initiative
+                    designed to help farmers protect their crops through
+                    disease detection, community awareness and accessible
+                    farming information.
+                </p>
+                <p>
+                    Our vision is to create a connected farming community
+                    where timely information can help prevent crop losses.
+                </p>
+                <a href="#home" class="btn-primary">Explore Our Vision ↗</a>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-main">
+            <div>
+                <a href="#home" class="brand footer-brand">
+                    🌾 Krushi Drishti
+                </a>
+                <p>Growing together, protecting together.</p>
+            </div>
+
+            <div class="footer-links">
+                <a href="#home">Home</a>
+                <a href="#services">Services</a>
+                <a href="#detect">Detection</a>
+                <a href="#community">Community</a>
+                <a href="#weather">Weather</a>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <span>© 2026 Krushi Drishti. Hackathon Project.</span>
+            <span>Made with 💚 for Farmers</span>
+        </div>
+    </footer>
+
+
+    <script src="js/firebase-config.js"></script>
+    <script src="js/alerts.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/script.js"></script>
+    <script src="js/weather.js"></script>
+</body>
+
+</html>

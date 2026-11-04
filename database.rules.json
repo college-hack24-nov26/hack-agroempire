@@ -1,32 +1,37 @@
 {
   "rules": {
-    ".read": true,
-    ".write": true,
     "users": {
-      ".indexOn": ["phone", "district", "state"]
+      ".read": "auth != null",
+      "$uid": {
+        ".write": "auth != null && auth.uid === $uid"
+      }
     },
-    "crops": {
-      ".indexOn": ["category", "season"]
+    "reports": {
+      ".read": true,
+      "$reportId": {
+        ".write": "auth != null",
+        ".validate": "newData.hasChildren(['crop', 'disease', 'village'])"
+      }
     },
-    "diagnostics": {
-      ".indexOn": ["farmerId", "crop", "severity", "timestamp"]
+    "notifications": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        "$notifId": {
+          // Farmers can only mark their own notifications as read; they cannot alter title/message/crop/disease
+          ".write": "auth != null && auth.uid === $uid && (!data.exists() || (newData.child('title').val() === data.child('title').val() && newData.child('message').val() === data.child('message').val()))"
+        }
+      }
     },
-    "mandi_prices": {
-      ".indexOn": ["commodity", "state", "district", "market", "arrivalDate"]
+    "processedReports": {
+      // Internal backend audit & idempotency guard - only backend Admin SDK has access
+      ".read": false,
+      ".write": false
     },
-    "weather_advisories": {
-      ".indexOn": ["district", "state", "timestamp"]
+    "scans": {
+      ".read": "auth != null",
+      ".write": "auth != null"
     },
-    "community": {
-      ".indexOn": ["category", "timestamp", "authorId", "likesCount"]
-    },
-    "schemes": {
-      ".indexOn": ["category", "targetAudience"]
-    },
-    "sensor_telemetry": {
-      ".indexOn": ["farmerId", "deviceId", "timestamp"]
-    },
-    "system": {
+    "testConnection": {
       ".read": true,
       ".write": true
     }

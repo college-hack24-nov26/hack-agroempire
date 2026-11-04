@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmer Dashboard | Krushi Drishti</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="dashboard-body">
+
+<header class="dashboard-header">
+    <h2>🌱 Krushi Drishti</h2>
+    <div class="dashboard-nav-actions">
+        <a href="index.html" style="color: white; text-decoration: none; font-size: 14px;">Home</a>
+
+        <!-- Notification Bell Icon with Live RTDB Badge -->
+        <div class="dashboard-bell-container" id="dashboardBellContainer">
+            <button class="dashboard-bell-btn" id="dashboardBellBtn" title="Village Crop Disease Alerts" aria-label="Notifications">
+                🔔
+                <span class="dashboard-badge-count" id="dashboardNotifBadge">0</span>
+            </button>
+
+            <!-- Dropdown Menu -->
+            <div class="dashboard-notif-dropdown" id="dashboardNotifDropdown">
+                <div class="dashboard-notif-header">
+                    <h4>🔔 Village Disease Alerts</h4>
+                    <button class="dashboard-mark-all-btn" id="markAllReadBtn">Mark all as read</button>
+                </div>
+                <ul class="dashboard-notif-list" id="dashboardNotifList">
+                    <li class="dashboard-notif-empty">No disease alerts for your village.</li>
+                </ul>
+                <div class="dashboard-notif-footer">
+                    <a href="#notificationsHistory" style="color: #205b39; text-decoration: none; font-weight: 600;">View Notification History ↓</a>
+                </div>
+            </div>
+        </div>
+
+        <button id="logoutBtn" class="logout-btn">Logout</button>
+    </div>
+</header>
+
+<main class="dashboard-container">
+    <section class="dashboard-welcome">
+        <p>SMART FARMING • BETTER FUTURE</p>
+        <h1>Welcome, <span id="farmerName">Farmer</span>! 👋</h1>
+        <p>Your farm, your health, your future.</p>
+    </section>
+
+    <section class="dashboard-grid">
+        <a href="disease-detection.html" class="dashboard-card">
+            <div>🌿</div>
+            <h3>Crop Disease Detection</h3>
+            <p>Upload a crop image to start an analysis.</p>
+        </a>
+
+        <a href="#notificationsHistory" class="dashboard-card">
+            <div>🔔</div>
+            <h3>Village Disease Alerts</h3>
+            <p>Real-time alerts reported by farmers in your village.</p>
+        </a>
+
+        <a href="index.html#weather" class="dashboard-card">
+            <div>🌦️</div>
+            <h3>Weather Information</h3>
+            <p>Check farming weather updates.</p>
+        </a>
+
+        <a href="index.html#community" class="dashboard-card">
+            <div>📋</div>
+            <h3>Report Crop Issue</h3>
+            <p>Alert fellow farmers about detected issues.</p>
+        </a>
+    </section>
+
+    <!-- Village Disease Alerts History Section -->
+    <section class="dashboard-notifs-section" id="notificationsHistory">
+        <h2>
+            <span>⚠️ Village Crop Disease Alerts</span>
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <button type="button" id="testAlertToastBtn" style="background: #eef4ec; color: #205b39; border: 1px solid #c8d8c5; padding: 5px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; font-weight: 600;">🔔 Test Alert Popup</button>
+                <button class="dashboard-mark-all-btn" id="sectionMarkAllReadBtn" style="font-size: 13px;">Mark all as read</button>
+            </div>
+        </h2>
+        <p style="color: #617464; font-size: 13.5px; margin-top: 4px; margin-bottom: 16px;">
+            Whenever a farmer reports a crop disease in your village, automatic alerts appear here in real time.
+        </p>
+        <div id="notifHistoryContainer">
+            <div class="dashboard-notif-empty" id="historyEmptyMsg" style="border: 1px dashed #d6e2d3; border-radius: 10px;">
+                No disease alerts reported in your village yet. Stay safe! 🌱
+            </div>
+            <div id="notifHistoryList" style="display: grid; gap: 12px;"></div>
+        </div>
+    </section>
+
+    <!-- Farmer Profile & Notification Settings -->
+    <section class="dashboard-profile">
+        <h2>👨‍🌾 Farmer Profile</h2>
+        <div id="profileLoading" style="color: #666; font-size: 14px; margin-bottom: 10px;">Loading profile from Firebase...</div>
+        <p><strong>Name:</strong> <span id="profileName">-</span></p>
+        <p><strong>Email:</strong> <span id="profileEmail">-</span></p>
+        <p><strong>Mobile:</strong> <span id="profilePhone">-</span></p>
+        <p><strong>Village:</strong> <span id="profileVillage">-</span></p>
+
+        <!-- Email Notification Preference Toggle -->
+        <div class="pref-switch-container">
+            <div>
+                <strong>📧 Email Disease Alerts</strong>
+                <p style="margin: 3px 0 0 0; font-size: 12px; color: #627565;">
+                    Receive instant email alerts whenever a crop disease outbreak is reported in your village.
+                </p>
+            </div>
+            <label class="switch" title="Toggle email alerts">
+                <input type="checkbox" id="emailNotifToggle" checked>
+                <span class="slider"></span>
+            </label>
+        </div>
+        <div id="prefSaveStatus" style="font-size: 12px; color: #205b39; margin-top: 6px; display: none;"></div>
+    </section>
+</main>
+
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics-compat.js"></script>
+
+<!-- App Firebase Config & Dashboard Logic -->
+<script src="js/firebase-config.js"></script>
+<script src="js/alerts.js"></script>
+<script src="js/dashboard.js"></script>
+</body>
+</html>

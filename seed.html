@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seed Dummy Data | Krushi Drishti</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .seed-card {
+            max-width: 650px;
+            margin: 40px auto;
+            background: white;
+            border-radius: 16px;
+            padding: 35px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            font-family: Arial, sans-serif;
+        }
+        .seed-btn {
+            background: #205b39;
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 15px;
+            transition: background 0.2s;
+        }
+        .seed-btn:hover {
+            background: #154228;
+        }
+        .seed-btn:disabled {
+            background: #a3bdae;
+            cursor: not-allowed;
+        }
+        .clear-btn {
+            background: #fbf0ea;
+            color: #b94a28;
+            border: 1px solid #f2cfc3;
+            padding: 10px 18px;
+            font-size: 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 10px;
+            width: 100%;
+        }
+        .log-box {
+            background: #1c2720;
+            color: #79f79b;
+            font-family: monospace;
+            padding: 16px;
+            border-radius: 10px;
+            margin-top: 20px;
+            max-height: 220px;
+            overflow-y: auto;
+            font-size: 13px;
+            line-height: 1.5;
+            display: none;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .badge-ready { background: #e3f5e9; color: #1e7039; }
+        .badge-warn { background: #fff3cd; color: #856404; }
+        .badge-success { background: #d4edda; color: #155724; }
+    </style>
+</head>
+<body style="background:#f4f7ed; margin:0; padding:20px;">
+
+<div class="seed-card">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h2 style="color:#205b39; margin:0;">🌱 Database Seeder</h2>
+        <a href="index.html" style="color:#205b39; text-decoration:none; font-weight:bold;">← Home</a>
+    </div>
+
+    <p style="color:#5f6e61; line-height:1.6; margin-top:10px;">
+        This tool populates your <strong>Firebase Realtime Database</strong> (<code>krushi-drishti-default-rtdb</code>)
+        with realistic dummy agriculture data: community disease reports, farmer profiles, and crop health scan history.
+    </p>
+
+    <div id="statusBadge" class="status-badge badge-ready">Checking Firebase Connection...</div>
+
+    <div style="background:#f9fbf7; border:1px solid #e1e9dd; border-radius:10px; padding:15px; margin-bottom:15px; font-size:14px;">
+        <h4 style="margin:0 0 8px 0; color:#205b39;">📦 Data included in this package:</h4>
+        <ul style="margin:0; padding-left:20px; color:#445749; line-height:1.7;">
+            <li><strong>6 Community Outbreak Reports</strong> (Tomato Late Blight, Cotton Leaf Curl, Rice Blast, Soybean Rust, Onion Purple Blotch) across Nashik, Akola, Kolhapur, etc.</li>
+            <li><strong>4 Crop Health Scan Logs</strong> with disease severity, symptoms, and spray advice.</li>
+            <li><strong>3 Farmer Profiles</strong> with names, villages, and contact details.</li>
+        </ul>
+    </div>
+
+    <button id="seedDataBtn" class="seed-btn">
+        🚀 Seed Dummy Data to Firebase
+    </button>
+
+    <div id="logBox" class="log-box"></div>
+
+    <div style="margin-top:25px; border-top:1px solid #e8ede4; padding-top:15px; display:flex; justify-content:space-between; align-items:center;">
+        <a href="https://console.firebase.google.com/project/krushi-drishti/database/krushi-drishti-default-rtdb/data/~2F" target="_blank" style="color:#205b39; font-size:14px; text-decoration:underline;">
+            Open Firebase Console RTDB ↗
+        </a>
+        <a href="index.html#community" style="color:#205b39; font-size:14px; font-weight:bold; text-decoration:none;">
+            View Community Alerts →
+        </a>
+    </div>
+</div>
+
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+
+<script>
+const statusBadge = document.getElementById("statusBadge");
+const seedBtn = document.getElementById("seedDataBtn");
+const logBox = document.getElementById("logBox");
+
+function log(msg) {
+    logBox.style.display = "block";
+    const line = document.createElement("div");
+    line.textContent = "[" + new Date().toLocaleTimeString() + "] " + msg;
+    logBox.appendChild(line);
+    logBox.scrollTop = logBox.scrollHeight;
+}
+
+// Check configuration on load
+window.addEventListener("DOMContentLoaded", () => {
+    if (typeof isFirebaseConfigured === "function" && isFirebaseConfigured()) {
+        statusBadge.textContent = "✅ Firebase Configured & Ready";
+        statusBadge.className = "status-badge badge-ready";
+    } else {
+        statusBadge.textContent = "⚠️ Note: Add your Firebase API Key in js/firebase-config.js";
+        statusBadge.className = "status-badge badge-warn";
+    }
+});
+
+seedBtn.addEventListener("click", async function () {
+    seedBtn.disabled = true;
+    seedBtn.textContent = "Seeding data to Firebase...";
+    logBox.innerHTML = "";
+    log("Fetching dummy data package...");
+
+    try {
+        const response = await fetch("krushi-drishti-dummy-data.json");
+        if (!response.ok) throw new Error("Could not load krushi-drishti-dummy-data.json");
+        const data = await response.json();
+
+        log("Successfully parsed JSON dummy data.");
+
+        if (!database) {
+            throw new Error("Firebase database instance is not available. Please verify js/firebase-config.js.");
+        }
+
+        // 1. Seed Reports
+        log("Uploading " + Object.keys(data.reports).length + " Community Reports to /reports...");
+        await database.ref("reports").update(data.reports);
+        log("✅ Community reports successfully written to Firebase RTDB.");
+
+        // 2. Seed Scans
+        log("Uploading " + Object.keys(data.scans).length + " Scan logs to /scans...");
+        await database.ref("scans").update(data.scans);
+        log("✅ Crop scans successfully written to Firebase RTDB.");
+
+        // 3. Seed Users
+        log("Uploading " + Object.keys(data.users).length + " Demo Farmers to /users...");
+        await database.ref("users").update(data.users);
+        log("✅ Farmer profiles successfully written to Firebase RTDB.");
+
+        // Also save to localStorage so local views immediately display them
+        localStorage.setItem("krushiReports", JSON.stringify(Object.values(data.reports)));
+
+        log("🎉 All dummy data successfully seeded into krushi-drishti-default-rtdb!");
+        statusBadge.textContent = "✅ Data Successfully Seeded!";
+        statusBadge.className = "status-badge badge-success";
+        seedBtn.textContent = "✅ Dummy Data Seeded Successfully";
+
+    } catch (err) {
+        console.error("Seeding failed:", err);
+        log("❌ Error: " + err.message);
+
+        // Fallback: save to localStorage so the website still renders them
+        try {
+            const resp = await fetch("krushi-drishti-dummy-data.json");
+            const data = await resp.json();
+            localStorage.setItem("krushiReports", JSON.stringify(Object.values(data.reports)));
+            log("ℹ️ Cached dummy reports to browser localStorage as fallback.");
+        } catch (e) {}
+
+        statusBadge.textContent = "⚠️ Upload Error (Check API Key or Rules)";
+        statusBadge.className = "status-badge badge-warn";
+        seedBtn.disabled = false;
+        seedBtn.textContent = "Retry Seeding";
+    }
+});
+</script>
+
+</body>
+</html>
+

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | Krushi Drishti</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="auth-body">
+
+<div class="auth-card">
+    <div class="auth-logo">🌱</div>
+    <h1>Join Krushi Drishti</h1>
+    <p class="auth-subtitle">Create Your Farmer Account</p>
+
+    <!-- Feedback messages -->
+    <div id="authStatus" class="auth-status"></div>
+
+    <form id="registerForm">
+        <label for="regName">Full Name</label>
+        <input type="text" id="regName"
+               placeholder="Enter your full name" required>
+
+        <label for="regEmail">Email Address</label>
+        <input type="email" id="regEmail"
+               placeholder="Enter your email" required>
+
+        <label for="regPhone">Mobile Number</label>
+        <input type="tel" id="regPhone"
+               placeholder="Enter 10 digit mobile number"
+               maxlength="10"
+               minlength="10"
+               pattern="[0-9]{10}"
+               title="Mobile number must contain exactly 10 digits"
+               required>
+
+        <label for="regPassword">Password</label>
+        <input type="password" id="regPassword"
+               placeholder="Create password (min 6 chars)" minlength="6" required>
+
+        <label for="regVillage">Village / Location</label>
+        <input type="text" id="regVillage"
+               placeholder="Enter your village" required>
+
+        <button type="submit" id="regBtn" class="auth-btn">
+            Create Account
+        </button>
+    </form>
+
+    <p class="auth-switch">
+        Already have an account?
+        <a href="login.html">Login</a>
+    </p>
+
+    <a href="index.html" class="back-link">← Back to Home</a>
+</div>
+
+<!-- Firebase SDKs (Compat version for browser script tags) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics-compat.js"></script>
+
+<!-- App Firebase Config & Auth Logic -->
+<script src="js/firebase-config.js"></script>
+<script src="js/auth.js"></script>
+</body>
+</html>

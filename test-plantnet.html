@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pl@ntNet API Test | Krushi Drishti</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'DM Sans', sans-serif;
+            background: #f0f5ed;
+            color: #2d3b2e;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #234d32, #287347);
+            color: white;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 20px;
+        }
+
+        .header span {
+            font-size: 13px;
+            opacity: 0.8;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 14px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+            border: 1px solid #e6eade;
+        }
+
+        .card h2 {
+            color: #205b39;
+            font-size: 18px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .badge-success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .badge-error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .badge-running {
+            background: #cce5ff;
+            color: #004085;
+        }
+
+        .test-section {
+            padding: 16px;
+            background: #f8faf7;
+            border-radius: 10px;
+            margin-bottom: 14px;
+            border-left: 4px solid #c8e6c9;
+        }
+
+        .test-section.error {
+            border-left-color: #f5c6cb;
+            background: #fdf2f2;
+        }
+
+        .test-section.success {
+            border-left-color: #287347;
+            background: #f0f8f0;
+        }
+
+        label {
+            font-weight: 600;
+            color: #205b39;
+            font-size: 14px;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            border: 2px dashed #c8e6c9;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+        }
+
+        select,
+        input[type="text"] {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #d5dfd2;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background: #287347;
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: #1e5c38;
+        }
+
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #555;
+            border: 1px solid #ddd;
+        }
+
+        .btn-test {
+            background: #1565c0;
+            color: white;
+        }
+
+        .btn-test:hover:not(:disabled) {
+            background: #0d47a1;
+        }
+
+        .preview-img {
+            max-width: 300px;
+            max-height: 250px;
+            border-radius: 10px;
+            margin: 12px 0;
+            border: 2px solid #e6eade;
+            display: none;
+        }
+
+        .log-box {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            border-radius: 10px;
+            padding: 16px;
+            font-family: 'Cascadia Code', 'Fira Code', monospace;
+            font-size: 13px;
+            line-height: 1.7;
+            max-height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .log-box .log-time {
+            color: #888;
+        }
+
+        .log-box .log-ok {
+            color: #4ec9b0;
+        }
+
+        .log-box .log-err {
+            color: #f48771;
+        }
+
+        .log-box .log-warn {
+            color: #dcdcaa;
+        }
+
+        .log-box .log-info {
+            color: #9cdcfe;
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 14px;
+        }
+
+        @media (max-width: 600px) {
+            .result-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .result-item {
+            padding: 12px;
+            background: #f8faf7;
+            border-radius: 8px;
+            border: 1px solid #e6eade;
+        }
+
+        .result-item .label {
+            font-size: 11px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .result-item .value {
+            font-size: 15px;
+            font-weight: 600;
+            color: #205b39;
+            margin-top: 2px;
+        }
+
+        .ref-images {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .ref-images img {
+            width: 90px;
+            height: 90px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #d5dfd2;
+        }
+
+        .step-num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 26px;
+            height: 26px;
+            background: #287347;
+            color: white;
+            border-radius: 50%;
+            font-size: 13px;
+            font-weight: 700;
+            margin-right: 8px;
+        }
+
+        .api-info {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin: 10px 0;
+        }
+
+        .api-info code {
+            background: #e8f5e9;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            color: #287347;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        <div>
+            <h1>🌿 Pl@ntNet API Test Suite</h1>
+            <span>Krushi Drishti — API Validation Before Integration</span>
+        </div>
+        <div>
+            <a href="disease-detection.html" style="color:white; text-decoration:none; font-size:14px;">← Back to
+                App</a>
+        </div>
+    </div>
+
+    <div class="container">
+
+        <!-- TEST 1: API Key Validation -->
+        <div class="card">
+            <h2><span class="step-num">1</span> API Key Validation</h2>
+            <p style="font-size:13px; color:#666; margin-bottom:12px;">
+                Testing your Pl@ntNet API key connectivity and quota status.
+            </p>
+            <div class="api-info">
+                <code>Key: Managed by Serverless Function (Secret)</code>
+                <code>Endpoint: /api/plantnet (Vercel Serverless Function)</code>
+            </div>
+            <div style="margin-top:12px;">
+                <button class="btn btn-test" id="testKeyBtn" onclick="testApiKey()">
+                    🔑 Test API Key
+                </button>
+                <span id="keyStatus" class="status-badge badge-pending" style="margin-left:10px;">Not tested</span>
+            </div>
+            <div id="keyResult" class="test-section" style="display:none; margin-top:14px;"></div>
+        </div>
+
+        <!-- TEST 2: Plant Identification -->
+        <div class="card">
+            <h2><span class="step-num">2</span> Plant Identification Test</h2>
+            <p style="font-size:13px; color:#666; margin-bottom:12px;">
+                Upload a leaf image to test the <code>POST /v2/identify/all</code> endpoint.
+            </p>
+
+            <div style="margin-bottom:14px;">
+                <label>Select a leaf image</label>
+                <input type="file" id="testImage" accept="image/jpeg,image/png" onchange="previewTestImage(this)">
+                <img id="testPreview" class="preview-img" alt="Preview">
+            </div>
+
+            <div style="margin-bottom:14px;">
+                <label>Plant organ</label>
+                <select id="testOrgan">
+                    <option value="leaf" selected>🍃 Leaf</option>
+                    <option value="flower">🌸 Flower</option>
+                    <option value="fruit">🍎 Fruit</option>
+                    <option value="bark">🪵 Bark</option>
+                    <option value="auto">🤖 Auto-detect</option>
+                </select>
+            </div>
+
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                <button class="btn btn-primary" id="identifyBtn" onclick="testIdentify()" disabled>
+                    🔬 Run Identification Test
+                </button>
+                <span id="identifyStatus" class="status-badge badge-pending">Waiting for image</span>
+            </div>
+
+            <!-- Identification Results -->
+            <div id="identifyResults" style="display:none; margin-top:18px;">
+                <h3 style="color:#205b39; font-size:16px; margin-bottom:10px;">🌱 Identification Results</h3>
+                <div id="identifyResultGrid" class="result-grid"></div>
+                <div id="topMatches" style="margin-top:14px;"></div>
+                <div id="refImages" style="margin-top:14px;"></div>
+            </div>
+        </div>
+
+        <!-- TEST 3: Raw API Response -->
+        <div class="card">
+            <h2><span class="step-num">3</span> Raw API Response Log</h2>
+            <p style="font-size:13px; color:#666; margin-bottom:12px;">
+                Full request/response log for debugging — inspect what the API returns.
+            </p>
+            <div class="log-box" id="logBox"><span class="log-info">// Pl@ntNet API test log</span>
+                <span class="log-info">// Waiting for tests to run...</span>
+            </div>
+            <div style="margin-top:10px;">
+                <button class="btn btn-secondary" onclick="clearLog()">🗑️ Clear Log</button>
+                <button class="btn btn-secondary" onclick="copyLog()" style="margin-left:6px;">📋 Copy Log</button>
+            </div>
+        </div>
+
+        <!-- TEST SUMMARY -->
+        <div class="card" id="summaryCard" style="display:none;">
+            <h2>📊 Test Summary</h2>
+            <div id="summaryContent"></div>
+            <div style="margin-top:16px; padding:14px; background:#e8f5e9; border-radius:10px;">
+                <p style="font-size:14px; color:#287347; font-weight:600;">
+                    ✅ If all tests pass, the API is ready to be integrated into the main disease detection page.
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // ==========================================
+        // Pl@ntNet API TEST SUITE
+        // ==========================================
+
+        // Endpoint for Vercel Serverless Function & Local Dev Server
+        const BASE_URL = "/api/plantnet";
+
+        const logBox = document.getElementById("logBox");
+        let testFile = null;
+        let testResults = { keyTest: null, identifyTest: null };
+
+        // ---- Logging Utilities ----
+        function log(msg, type) {
+            const time = new Date().toLocaleTimeString();
+            const cls = type || "info";
+            const prefix = {
+                ok: "✅",
+                err: "❌",
+                warn: "⚠️",
+                info: "ℹ️"
+            }[cls] || "📝";
+
+            logBox.innerHTML += '\n<span class="log-time">[' + time + ']</span> <span class="log-' + cls + '">' + prefix + ' ' + escapeHtml(msg) + '</span>';
+            logBox.scrollTop = logBox.scrollHeight;
+        }
+
+        function logJson(label, obj) {
+            const time = new Date().toLocaleTimeString();
+            const jsonStr = JSON.stringify(obj, null, 2);
+            logBox.innerHTML += '\n<span class="log-time">[' + time + ']</span> <span class="log-info">📦 ' + escapeHtml(label) + ':</span>\n<span class="log-ok">' + escapeHtml(jsonStr) + '</span>';
+            logBox.scrollTop = logBox.scrollHeight;
+        }
+
+        function escapeHtml(str) {
+            return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        }
+
+        function clearLog() {
+            logBox.innerHTML = '<span class="log-info">// Log cleared</span>';
+        }
+
+        function copyLog() {
+            const text = logBox.innerText;
+            navigator.clipboard.writeText(text).then(function () {
+                alert("Log copied to clipboard!");
+            });
+        }
+
+        // ---- Image Preview ----
+        function previewTestImage(input) {
+            const file = input.files && input.files[0];
+            if (!file) return;
+
+            if (!file.type.startsWith("image/")) {
+                alert("Please select a valid image file (JPEG or PNG).");
+                return;
+            }
+
+            testFile = file;
+            const preview = document.getElementById("testPreview");
+            preview.src = URL.createObjectURL(file);
+            preview.style.display = "block";
+
+            document.getElementById("identifyBtn").disabled = false;
+            document.getElementById("identifyStatus").textContent = "Ready";
+            document.getElementById("identifyStatus").className = "status-badge badge-pending";
+
+            log("Image selected: " + file.name + " (" + (file.size / 1024).toFixed(1) + " KB, " + file.type + ")", "info");
+        }
+
+        // ==========================================
+        // TEST 1: API Key Validation via /api/plantnet (GET)
+        // ==========================================
+        async function testApiKey() {
+            const btn = document.getElementById("testKeyBtn");
+            const status = document.getElementById("keyStatus");
+            const resultDiv = document.getElementById("keyResult");
+
+            btn.disabled = true;
+            status.textContent = "Testing...";
+            status.className = "status-badge badge-running";
+
+            log("--- TEST 1: API Key Validation ---", "info");
+            log("Calling Serverless Function GET " + BASE_URL + " ...", "info");
+
+            try {
+                const startTime = performance.now();
+                const response = await fetch(BASE_URL);
+                const elapsed = (performance.now() - startTime).toFixed(0);
+
+                log("Response status: " + response.status + " " + response.statusText + " (" + elapsed + "ms)", response.ok ? "ok" : "err");
+
+                if (response.ok) {
+                    const data = await response.json();
+                    logJson("Serverless Response", data);
+
+                    status.textContent = "✅ Key Valid";
+                    status.className = "status-badge badge-success";
+
+                    resultDiv.className = "test-section success";
+                    resultDiv.style.display = "block";
+                    resultDiv.innerHTML = '<strong style="color:#155724;">' + escapeHtml(data.message || "API Key is valid!") + '</strong>' +
+                        '<p style="font-size:13px; margin-top:6px;">Response time: ' + elapsed + 'ms</p>' +
+                        '<p style="font-size:13px;">Total Projects: ' + (data.totalProjects || "Available") + '</p>';
+
+                    testResults.keyTest = "pass";
+                    log("API key validation: PASSED", "ok");
+                } else {
+                    const errorData = await response.json().catch(() => ({ error: "Unknown error" }));
+                    log("Error response: " + JSON.stringify(errorData), "err");
+
+                    status.textContent = "❌ Failed";
+                    status.className = "status-badge badge-error";
+
+                    resultDiv.className = "test-section error";
+                    resultDiv.style.display = "block";
+                    resultDiv.innerHTML = '<strong style="color:#721c24;">API Key test failed!</strong>' +
+                        '<p style="font-size:13px; margin-top:6px;">Status: ' + response.status + '</p>' +
+                        '<p style="font-size:13px;">Error: ' + escapeHtml(errorData.error || response.statusText) + '</p>';
+
+                    testResults.keyTest = "fail";
+                    log("API key validation: FAILED", "err");
+                }
+            } catch (err) {
+                log("Network error: " + err.message, "err");
+                status.textContent = "❌ Error";
+                status.className = "status-badge badge-error";
+
+                resultDiv.className = "test-section error";
+                resultDiv.style.display = "block";
+                resultDiv.innerHTML = '<strong style="color:#721c24;">Network Error</strong>' +
+                    '<p style="font-size:13px; margin-top:6px;">' + escapeHtml(err.message) + '</p>' +
+                    '<p style="font-size:13px;">Make sure the server is running or deployed.</p>';
+
+                testResults.keyTest = "error";
+            }
+
+            btn.disabled = false;
+            updateSummary();
+        }
+
+        // Convert File to base64 Data URL (with automatic resize if needed)
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        const maxDim = 1200;
+                        let w = img.width;
+                        let h = img.height;
+                        if (w > maxDim || h > maxDim) {
+                            if (w > h) {
+                                h = Math.round((h * maxDim) / w);
+                                w = maxDim;
+                            } else {
+                                w = Math.round((w * maxDim) / h);
+                                h = maxDim;
+                            }
+                            const canvas = document.createElement("canvas");
+                            canvas.width = w;
+                            canvas.height = h;
+                            const ctx = canvas.getContext("2d");
+                            ctx.drawImage(img, 0, 0, w, h);
+                            resolve(canvas.toDataURL("image/jpeg", 0.85));
+                        } else {
+                            resolve(e.target.result);
+                        }
+                    };
+                    img.onerror = reject;
+                    img.src = e.target.result;
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // ==========================================
+        // TEST 2: Plant Identification via /api/plantnet (POST)
+        // ==========================================
+        async function testIdentify() {
+            if (!testFile) {
+                alert("Please select an image first.");
+                return;
+            }
+
+            const btn = document.getElementById("identifyBtn");
+            const status = document.getElementById("identifyStatus");
+            const resultsDiv = document.getElementById("identifyResults");
+            const organ = document.getElementById("testOrgan").value;
+
+            btn.disabled = true;
+            status.textContent = "Identifying...";
+            status.className = "status-badge badge-running";
+            resultsDiv.style.display = "none";
+
+            log("", "info");
+            log("--- TEST 2: Plant Identification ---", "info");
+            log("Image: " + testFile.name + " | Organ: " + organ, "info");
+
+            try {
+                log("Encoding image to base64...", "info");
+                const imageBase64 = await fileToBase64(testFile);
+                log("Sending POST " + BASE_URL + " ...", "info");
+
+                const startTime = performance.now();
+                const response = await fetch(BASE_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ imageBase64, organ })
+                });
+                const elapsed = (performance.now() - startTime).toFixed(0);
+
+                log("Response status: " + response.status + " " + response.statusText + " (" + elapsed + "ms)", response.ok ? "ok" : "err");
+
+                if (response.ok) {
+                    const data = await response.json();
+                    logJson("Full API Response", data);
+
+                    // Display results
+                    displayIdentifyResults(data, elapsed);
+
+                    status.textContent = "✅ Success";
+                    status.className = "status-badge badge-success";
+                    testResults.identifyTest = "pass";
+                    log("Plant identification test: PASSED", "ok");
+                } else if (response.status === 404) {
+                    const errorText = await response.text();
+                    log("404 - Plant not recognized in image", "warn");
+
+                    status.textContent = "⚠️ Not Recognized";
+                    status.className = "status-badge badge-pending";
+
+                    resultsDiv.style.display = "block";
+                    document.getElementById("identifyResultGrid").innerHTML =
+                        '<div class="result-item" style="grid-column:1/-1;">' +
+                        '<div class="label">RESULT</div>' +
+                        '<div class="value" style="color:#856404;">The image was not recognized as a plant. Try a clearer leaf photo.</div>' +
+                        '</div>';
+
+                    testResults.identifyTest = "not_recognized";
+                } else {
+                    const errorText = await response.text();
+                    log("API error: " + errorText, "err");
+
+                    status.textContent = "❌ Error " + response.status;
+                    status.className = "status-badge badge-error";
+
+                    resultsDiv.style.display = "block";
+                    document.getElementById("identifyResultGrid").innerHTML =
+                        '<div class="result-item" style="grid-column:1/-1;">' +
+                        '<div class="label">ERROR</div>' +
+                        '<div class="value" style="color:#721c24;">HTTP ' + response.status + ': ' + escapeHtml(errorText.substring(0, 300)) + '</div>' +
+                        '</div>';
+
+                    testResults.identifyTest = "fail";
+                    log("Plant identification test: FAILED", "err");
+                }
+            } catch (err) {
+                log("Network error: " + err.message, "err");
+
+                status.textContent = "❌ Network Error";
+                status.className = "status-badge badge-error";
+                testResults.identifyTest = "error";
+            }
+
+            btn.disabled = false;
+            updateSummary();
+        }
+
+        btn.disabled = false;
+        updateSummary();
+
+
+        // ---- Display Identification Results ----
+        function displayIdentifyResults(data, elapsed) {
+            const resultsDiv = document.getElementById("identifyResults");
+            const grid = document.getElementById("identifyResultGrid");
+            const matchesDiv = document.getElementById("topMatches");
+            const refDiv = document.getElementById("refImages");
+
+            resultsDiv.style.display = "block";
+
+            if (!data.results || data.results.length === 0) {
+                grid.innerHTML = '<div class="result-item" style="grid-column:1/-1;">' +
+                    '<div class="label">RESULT</div>' +
+                    '<div class="value">No matches found</div></div>';
+                return;
+            }
+
+            const top = data.results[0];
+            const species = top.species || {};
+            const score = top.score || 0;
+            const sciName = species.scientificNameWithoutAuthor || species.scientificName || "Unknown";
+            const commonNames = species.commonNames || [];
+            const family = (species.family && species.family.scientificNameWithoutAuthor) || "—";
+            const genus = (species.genus && species.genus.scientificNameWithoutAuthor) || "—";
+
+            const scorePercent = (score * 100).toFixed(1);
+            let confColor = "#155724";
+            let confLabel = "High";
+            if (score < 0.5) { confColor = "#721c24"; confLabel = "Low"; }
+            else if (score < 0.8) { confColor = "#856404"; confLabel = "Moderate"; }
+
+            // Result grid
+            grid.innerHTML =
+                '<div class="result-item">' +
+                '<div class="label">SCIENTIFIC NAME</div>' +
+                '<div class="value">' + escapeHtml(sciName) + '</div>' +
+                '</div>' +
+                '<div class="result-item">' +
+                '<div class="label">COMMON NAMES</div>' +
+                '<div class="value">' + (commonNames.length ? escapeHtml(commonNames.slice(0, 3).join(", ")) : "—") + '</div>' +
+                '</div>' +
+                '<div class="result-item">' +
+                '<div class="label">FAMILY</div>' +
+                '<div class="value">' + escapeHtml(family) + '</div>' +
+                '</div>' +
+                '<div class="result-item">' +
+                '<div class="label">GENUS</div>' +
+                '<div class="value">' + escapeHtml(genus) + '</div>' +
+                '</div>' +
+                '<div class="result-item">' +
+                '<div class="label">CONFIDENCE</div>' +
+                '<div class="value" style="color:' + confColor + ';">' + scorePercent + '% (' + confLabel + ')</div>' +
+                '</div>' +
+                '<div class="result-item">' +
+                '<div class="label">RESPONSE TIME</div>' +
+                '<div class="value">' + elapsed + 'ms</div>' +
+                '</div>';
+
+            // Top 5 matches
+            if (data.results.length > 1) {
+                let html = '<h4 style="color:#205b39; font-size:14px; margin-bottom:8px;">🔬 Top ' + Math.min(data.results.length, 5) + ' Matches</h4>';
+                html += '<table style="width:100%; font-size:13px; border-collapse:collapse;">';
+                html += '<tr style="background:#f0f5ed;"><th style="text-align:left; padding:6px 10px;">Rank</th><th style="text-align:left; padding:6px 10px;">Species</th><th style="text-align:left; padding:6px 10px;">Common Name</th><th style="text-align:right; padding:6px 10px;">Score</th></tr>';
+
+                data.results.slice(0, 5).forEach(function (r, i) {
+                    const rsp = r.species || {};
+                    const rName = rsp.scientificNameWithoutAuthor || "Unknown";
+                    const rCommon = (rsp.commonNames && rsp.commonNames[0]) || "—";
+                    const rScore = (r.score * 100).toFixed(1);
+                    html += '<tr style="border-bottom:1px solid #eee;">' +
+                        '<td style="padding:6px 10px; font-weight:600;">#' + (i + 1) + '</td>' +
+                        '<td style="padding:6px 10px; font-style:italic;">' + escapeHtml(rName) + '</td>' +
+                        '<td style="padding:6px 10px;">' + escapeHtml(rCommon) + '</td>' +
+                        '<td style="padding:6px 10px; text-align:right; font-weight:600;">' + rScore + '%</td>' +
+                        '</tr>';
+                });
+                html += '</table>';
+                matchesDiv.innerHTML = html;
+            }
+
+            // Reference images from top match
+            const images = top.images || [];
+            if (images.length > 0) {
+                let imgHtml = '<h4 style="color:#205b39; font-size:14px; margin-bottom:8px;">📸 Reference Images (from Pl@ntNet)</h4>';
+                imgHtml += '<div class="ref-images">';
+                images.slice(0, 4).forEach(function (img) {
+                    const imgUrl = (img.url && (img.url.m || img.url.s || img.url.o)) || "";
+                    if (imgUrl) {
+                        imgHtml += '<img src="' + imgUrl + '" alt="Reference" onerror="this.style.display=\'none\'">';
+                    }
+                });
+                imgHtml += '</div>';
+                refDiv.innerHTML = imgHtml;
+            }
+        }
+
+        // ---- Test Summary ----
+        function updateSummary() {
+            const card = document.getElementById("summaryCard");
+            const content = document.getElementById("summaryContent");
+
+            const hasAnyResult = testResults.keyTest || testResults.identifyTest;
+            if (!hasAnyResult) return;
+
+            card.style.display = "block";
+
+            let html = '<table style="width:100%; font-size:14px; border-collapse:collapse;">';
+
+            function statusIcon(val) {
+                if (val === "pass") return '<span style="color:#155724;">✅ PASSED</span>';
+                if (val === "fail") return '<span style="color:#721c24;">❌ FAILED</span>';
+                if (val === "error") return '<span style="color:#721c24;">❌ ERROR</span>';
+                if (val === "not_recognized") return '<span style="color:#856404;">⚠️ NOT RECOGNIZED</span>';
+                return '<span style="color:#888;">⏳ Pending</span>';
+            }
+
+            html += '<tr style="border-bottom:1px solid #eee;"><td style="padding:8px;">1. API Key Validation</td><td style="padding:8px; text-align:right;">' + statusIcon(testResults.keyTest) + '</td></tr>';
+            html += '<tr style="border-bottom:1px solid #eee;"><td style="padding:8px;">2. Plant Identification</td><td style="padding:8px; text-align:right;">' + statusIcon(testResults.identifyTest) + '</td></tr>';
+            html += '</table>';
+
+            content.innerHTML = html;
+        }
+    </script>
+
+</body>
+
+</html>

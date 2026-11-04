@@ -1,0 +1,1544 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenWeather Forecast API Tester | Krushi Drishti</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #287347;
+            --primary-dark: #1b4d30;
+            --primary-light: #e8f5e9;
+            --accent: #f59e0b;
+            --bg-body: #f3f6f3;
+            --card-bg: #ffffff;
+            --text-main: #1f2937;
+            --text-muted: #6b7280;
+            --border: #e5e7eb;
+            --border-focus: #287347;
+            --success: #16a34a;
+            --danger: #dc2626;
+            --info: #0284c7;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-body);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding-bottom: 50px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1b4d30 0%, #287347 100%);
+            color: white;
+            padding: 22px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-title i {
+            font-size: 26px;
+            color: #86efac;
+        }
+
+        .header-title h1 {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+        }
+
+        .header-badge {
+            font-size: 12px;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 5px 12px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 28px auto 0;
+            padding: 0 20px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        @media (min-width: 900px) {
+            .grid-config-advisory {
+                display: grid;
+                grid-template-columns: 3fr 2fr;
+                gap: 20px;
+            }
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 14px;
+            padding: 24px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+            border: 1px solid var(--border);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .card-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #374151;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            background: #fff;
+            transition: all 0.2s ease;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(40, 115, 71, 0.15);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 11px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: #f1f5f9;
+            color: #334155;
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: #e2e8f0;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary-light);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .tab-group {
+            display: flex;
+            background: #f1f5f9;
+            padding: 4px;
+            border-radius: 8px;
+            gap: 4px;
+            margin-bottom: 16px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 8px 12px;
+            font-size: 13px;
+            font-weight: 600;
+            border: none;
+            background: transparent;
+            color: #475569;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            background: white;
+            color: var(--primary-dark);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Preset Chips */
+        .chip-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .chip {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 4px 10px;
+            border-radius: 14px;
+            font-size: 12px;
+            color: #475569;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .chip:hover {
+            background: #e8f5e9;
+            color: var(--primary-dark);
+            border-color: #a7f3d0;
+        }
+
+        /* Status & Alert Boxes */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .status-ready {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        .status-loading {
+            background: #e0f2fe;
+            color: #0369a1;
+        }
+
+        .status-success {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .status-error {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .alert-box {
+            padding: 14px 18px;
+            border-radius: 10px;
+            margin-bottom: 18px;
+            font-size: 13px;
+            line-height: 1.5;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .alert-info {
+            background: #eff6ff;
+            border-left: 4px solid #3b82f6;
+            color: #1e40af;
+        }
+
+        .alert-error {
+            background: #fef2f2;
+            border-left: 4px solid #ef4444;
+            color: #991b1b;
+        }
+
+        .alert-success {
+            background: #f0fdf4;
+            border-left: 4px solid #22c55e;
+            color: #166534;
+        }
+
+        /* Current Weather Showcase */
+        .current-hero {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px;
+            background: linear-gradient(135deg, #1b4d30, #2e7d4e);
+            color: white;
+            border-radius: 14px;
+            margin-bottom: 20px;
+        }
+
+        .hero-left h2 {
+            font-size: 26px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .hero-left .subtitle {
+            font-size: 13px;
+            opacity: 0.85;
+            margin-top: 4px;
+        }
+
+        .hero-temp-box {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .hero-temp-box .temp-num {
+            font-size: 48px;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .hero-weather-desc {
+            font-size: 16px;
+            text-transform: capitalize;
+            font-weight: 500;
+            opacity: 0.95;
+        }
+
+        .weather-metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .metric-card {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            padding: 12px 14px;
+            border-radius: 10px;
+            text-align: left;
+        }
+
+        .metric-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .metric-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        /* 5-Day Daily Cards */
+        .forecast-cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        .forecast-card {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .forecast-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+            border-color: #86efac;
+        }
+
+        .forecast-card.today {
+            border: 2px solid var(--primary);
+            background: #f9fcf9;
+        }
+
+        .forecast-date {
+            font-size: 13px;
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        .forecast-day-name {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .forecast-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto;
+        }
+
+        .forecast-temps {
+            margin: 6px 0;
+            font-size: 15px;
+            font-weight: 700;
+            color: #111827;
+        }
+
+        .forecast-temps .min-temp {
+            font-weight: 500;
+            color: #6b7280;
+            margin-left: 6px;
+        }
+
+        .forecast-condition {
+            font-size: 12px;
+            color: #4b5563;
+            text-transform: capitalize;
+            min-height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .forecast-rain-prob {
+            font-size: 11px;
+            font-weight: 600;
+            color: #0284c7;
+            background: #e0f2fe;
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            margin-top: 6px;
+        }
+
+        /* 3-Hour Interval Table */
+        .table-responsive {
+            overflow-x: auto;
+            max-height: 380px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+        }
+
+        table.forecast-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            text-align: left;
+            background: white;
+        }
+
+        table.forecast-table th {
+            position: sticky;
+            top: 0;
+            background: #f8fafc;
+            padding: 10px 14px;
+            font-weight: 700;
+            color: #475569;
+            border-bottom: 2px solid var(--border);
+            z-index: 10;
+        }
+
+        table.forecast-table td {
+            padding: 10px 14px;
+            border-bottom: 1px solid #f1f5f9;
+            vertical-align: middle;
+        }
+
+        table.forecast-table tr:hover {
+            background: #f8faf7;
+        }
+
+        /* Agricultural Advisories */
+        .advisory-item {
+            padding: 12px 14px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            font-size: 13px;
+            line-height: 1.45;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .advisory-item i {
+            font-size: 18px;
+            margin-top: 2px;
+        }
+
+        .adv-good {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            color: #14532d;
+        }
+
+        .adv-warn {
+            background: #fffbeb;
+            border: 1px solid #fde68a;
+            color: #78350f;
+        }
+
+        .adv-danger {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #7f1d1d;
+        }
+
+        /* Raw JSON code block */
+        .code-container {
+            position: relative;
+            background: #0f172a;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .code-toolbar {
+            background: #1e293b;
+            padding: 8px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #94a3b8;
+            font-size: 12px;
+            font-family: monospace;
+        }
+
+        pre.code-block {
+            margin: 0;
+            padding: 16px;
+            color: #f8fafc;
+            font-family: 'Fira Code', Consolas, Monaco, monospace;
+            font-size: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+            line-height: 1.5;
+            tab-size: 2;
+        }
+
+        .url-preview {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 12px;
+            color: #0369a1;
+            word-break: break-all;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .spinning {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-title">
+            <i class="fa-solid fa-cloud-sun-rain"></i>
+            <div>
+                <h1>OpenWeather Forecast API Tester</h1>
+                <p style="font-size: 12px; opacity: 0.85;">Krushi Drishti &bull; Real-time Weather & Agro-Advisory Engine</p>
+            </div>
+        </div>
+        <div>
+            <span class="header-badge" id="apiStatusBadge">
+                <i class="fa-solid fa-circle-notch fa-spin"></i> Ready
+            </span>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <!-- Top Section: Config & Quick Instructions -->
+        <div class="grid-config-advisory">
+            <!-- Left Card: API Settings & Query Form -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">
+                        <i class="fa-solid fa-sliders"></i> Request Configuration
+                    </span>
+                    <button class="btn btn-outline" style="padding: 4px 10px; font-size: 12px;" onclick="loadMockData()">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> Load Mock Preview
+                    </button>
+                </div>
+
+                <!-- API Key Input -->
+                <div class="form-group">
+                    <label for="apiKey">
+                        OpenWeatherMap API Key
+                        <span style="font-weight: normal; color: #64748b; font-size: 11px;">(Stored locally in your browser)</span>
+                    </label>
+                    <div class="input-row">
+                        <input type="password" id="apiKey" value="4291e5ee29e71454cfb4b8fbee5aed7f" placeholder="Paste your 32-character API Key here (e.g. b6907d289e10d7...)" />
+                        <button class="btn btn-secondary" type="button" onclick="toggleKeyVisibility()" title="Show/Hide Key">
+                            <i id="eyeIcon" class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
+                    <div style="margin-top: 6px; font-size: 11px; color: #64748b;">
+                        Don't have a key? Get one free at 
+                        <a href="https://home.openweathermap.org/api_keys" target="_blank" style="color: var(--primary); font-weight: 600;">openweathermap.org</a>
+                        (Free tier includes 1,000,000 calls/month & 5-day / 3-hour forecast).
+                    </div>
+                </div>
+
+                <!-- Query Type Tabs -->
+                <div class="tab-group">
+                    <button class="tab-btn active" id="tabCity" onclick="switchQueryMode('city')">
+                        <i class="fa-solid fa-city"></i> By City Name
+                    </button>
+                    <button class="tab-btn" id="tabCoords" onclick="switchQueryMode('coords')">
+                        <i class="fa-solid fa-location-dot"></i> By Coordinates (Lat / Lon)
+                    </button>
+                </div>
+
+                <!-- City Input Mode -->
+                <div id="cityInputMode">
+                    <div class="form-group">
+                        <label for="cityName">City Name / State / Country Code</label>
+                        <div class="input-row">
+                            <input type="text" id="cityName" value="Pune,IN" placeholder="e.g. Pune,IN or Nashik or Mumbai" />
+                            <button class="btn btn-secondary" onclick="useCurrentLocation()" title="Detect My Location">
+                                <i class="fa-solid fa-crosshairs"></i> GPS
+                            </button>
+                        </div>
+                        <div class="chip-group">
+                            <span class="chip" onclick="setCity('Pune,IN')">Pune</span>
+                            <span class="chip" onclick="setCity('Nashik,IN')">Nashik</span>
+                            <span class="chip" onclick="setCity('Mumbai,IN')">Mumbai</span>
+                            <span class="chip" onclick="setCity('Nagpur,IN')">Nagpur</span>
+                            <span class="chip" onclick="setCity('Delhi,IN')">Delhi</span>
+                            <span class="chip" onclick="setCity('Bengaluru,IN')">Bengaluru</span>
+                            <span class="chip" onclick="setCity('London,GB')">London</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Coordinates Input Mode -->
+                <div id="coordsInputMode" style="display: none;">
+                    <div class="form-group">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                            <div>
+                                <label for="lat">Latitude</label>
+                                <input type="number" id="lat" step="any" placeholder="18.5204" value="18.5204">
+                            </div>
+                            <div>
+                                <label for="lon">Longitude</label>
+                                <input type="number" id="lon" step="any" placeholder="73.8567" value="73.8567">
+                            </div>
+                        </div>
+                        <div style="margin-top: 8px;">
+                            <button class="btn btn-secondary" style="font-size: 12px; padding: 6px 12px;" onclick="useCurrentLocation()">
+                                <i class="fa-solid fa-location-crosshairs"></i> Get Current Device GPS
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Additional Options (Units, Language, Endpoint) -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 20px;">
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label for="apiUnits">Units</label>
+                        <select id="apiUnits">
+                            <option value="metric" selected>Metric (°C, m/s)</option>
+                            <option value="imperial">Imperial (°F, mph)</option>
+                            <option value="standard">Standard (Kelvin)</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label for="apiLang">Language</label>
+                        <select id="apiLang">
+                            <option value="en" selected>English</option>
+                            <option value="hi">Hindi (हिंदी)</option>
+                            <option value="mr">Marathi (मराठी)</option>
+                            <option value="es">Spanish</option>
+                            <option value="fr">French</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label for="apiEndpoint">Target API</label>
+                        <select id="apiEndpoint">
+                            <option value="forecast" selected>5-Day Forecast (/forecast)</option>
+                            <option value="weather">Current Only (/weather)</option>
+                            <option value="both">Both (Forecast + Current)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Action Button -->
+                <button class="btn btn-primary" id="fetchBtn" style="width: 100%; padding: 13px; font-size: 15px;" onclick="runWeatherTest()">
+                    <i class="fa-solid fa-bolt"></i> Send API Test Request
+                </button>
+            </div>
+
+            <!-- Right Card: API Guide & Agro Advisory Quick Check -->
+            <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
+                <div>
+                    <div class="card-header">
+                        <span class="card-title">
+                            <i class="fa-solid fa-wheat-awn"></i> Krushi Drishti Advisory Engine
+                        </span>
+                        <span style="font-size: 12px; color: var(--text-muted);">Smart Decision Hub</span>
+                    </div>
+
+                    <div id="advisoryContainer">
+                        <div class="alert-box alert-info">
+                            <i class="fa-solid fa-circle-info" style="font-size: 18px; margin-top: 1px;"></i>
+                            <div>
+                                <strong>Ready for Testing</strong>
+                                <p style="margin-top: 4px;">Run an API test with your OpenWeather API key to calculate live agricultural insights: spraying feasibility, irrigation advisories, and crop heat/frost risk.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- API Key Status Checklist -->
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px; margin-top: 15px;">
+                    <div style="font-size: 12px; font-weight: 700; color: #475569; margin-bottom: 8px;">
+                        <i class="fa-solid fa-circle-question"></i> OpenWeather Key Quick Facts:
+                    </div>
+                    <ul style="font-size: 12px; color: #64748b; padding-left: 18px; line-height: 1.6;">
+                        <li><strong>Activation Delay:</strong> New OpenWeather API keys take <strong>10 to 60 minutes</strong> to activate after signing up. If you get a <code>401 Unauthorized</code> right after creation, wait a few minutes.</li>
+                        <li><strong>Free Tier Endpoint:</strong> The <code>/data/2.5/forecast</code> (5-day / 3-hour) endpoint is 100% free with no credit card required.</li>
+                        <li><strong>CORS Support:</strong> OpenWeatherMap natively supports direct browser fetch requests (CORS enabled).</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- URL Called Preview & Status Bar -->
+        <div id="statusBarSection" style="margin-top: 20px; display: none;">
+            <div class="card" style="padding: 16px 20px;">
+                <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 10px;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span class="status-badge status-ready" id="httpStatusBadge">HTTP ---</span>
+                        <span style="font-size: 13px; font-weight: 600;" id="responseTimeText">Response time: -- ms</span>
+                    </div>
+                    <div style="font-size: 12px; color: var(--text-muted);" id="timestampText"></div>
+                </div>
+                <div class="url-preview">
+                    <i class="fa-solid fa-link" style="color: #64748b;"></i>
+                    <span id="urlCalledText" style="flex: 1;">https://api.openweathermap.org/...</span>
+                    <button class="btn btn-secondary" style="padding: 3px 8px; font-size: 11px;" onclick="copyApiUrl()">Copy</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test Error Alert Box -->
+        <div id="errorAlertBox" style="margin-top: 20px; display: none;">
+            <div class="alert-box alert-error">
+                <i class="fa-solid fa-triangle-exclamation" style="font-size: 22px;"></i>
+                <div style="flex: 1;">
+                    <strong id="errorTitle">API Error</strong>
+                    <div id="errorMessage" style="margin-top: 4px;"></div>
+                    <div id="errorSolution" style="margin-top: 8px; font-size: 12px; opacity: 0.9;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Section (Populated dynamically) -->
+        <div id="resultsSection" style="margin-top: 20px; display: none;">
+            <!-- Current Weather Hero Card -->
+            <div class="card" style="padding: 20px; margin-bottom: 20px;">
+                <div class="current-hero" id="currentHero">
+                    <div class="hero-left">
+                        <h2>
+                            <span id="heroCityName">Pune, IN</span>
+                            <span style="font-size: 14px; font-weight: 500; opacity: 0.85;" id="heroCoords">18.52°N, 73.85°E</span>
+                        </h2>
+                        <div class="subtitle" id="heroDateTime">Sunday, November 4, 2026 &bull; 07:00 AM</div>
+                        <div class="hero-temp-box">
+                            <span class="temp-num" id="heroTemp">28°C</span>
+                            <div>
+                                <div class="hero-weather-desc" id="heroDesc">Partly Cloudy</div>
+                                <div style="font-size: 13px; opacity: 0.85;" id="heroFeelsLike">Feels like 29°C</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="text-align: center;">
+                        <img id="heroIcon" src="https://openweathermap.org/img/wn/02d@4x.png" alt="Weather condition" style="width: 100px; height: 100px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));">
+                    </div>
+                </div>
+
+                <!-- Weather Details Metrics Grid -->
+                <div class="weather-metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-label"><i class="fa-solid fa-droplet" style="color: #0284c7;"></i> Humidity</div>
+                        <div class="metric-value" id="valHumidity">55%</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label"><i class="fa-solid fa-wind" style="color: #64748b;"></i> Wind Speed</div>
+                        <div class="metric-value" id="valWind">12 km/h</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label"><i class="fa-solid fa-compass" style="color: #64748b;"></i> Wind Direction</div>
+                        <div class="metric-value" id="valWindDir">240° (WSW)</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label"><i class="fa-solid fa-gauge" style="color: #f59e0b;"></i> Pressure</div>
+                        <div class="metric-value" id="valPressure">1012 hPa</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label"><i class="fa-solid fa-cloud" style="color: #94a3b8;"></i> Cloud Cover</div>
+                        <div class="metric-value" id="valClouds">20%</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label"><i class="fa-solid fa-eye" style="color: #10b981;"></i> Visibility</div>
+                        <div class="metric-value" id="valVisibility">10 km</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label"><i class="fa-solid fa-sun" style="color: #eab308;"></i> Sunrise / Sunset</div>
+                        <div class="metric-value" id="valSun">06:24 / 18:02</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5-Day Forecast Grouped Summary -->
+            <div class="card" id="forecastDailyCard" style="margin-bottom: 20px;">
+                <div class="card-header">
+                    <span class="card-title">
+                        <i class="fa-solid fa-calendar-days"></i> 5-Day Daily Forecast Overview
+                    </span>
+                    <span style="font-size: 13px; color: var(--text-muted);" id="forecastPeriodLabel">Calculated from 3-Hour Forecast Blocks</span>
+                </div>
+                <div class="forecast-cards-container" id="dailyForecastContainer">
+                    <!-- Populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- 3-Hour Timestep Table -->
+            <div class="card" id="forecastHourlyCard" style="margin-bottom: 20px;">
+                <div class="card-header">
+                    <span class="card-title">
+                        <i class="fa-solid fa-clock"></i> 3-Hour Interval Breakdown (40 Steps)
+                    </span>
+                    <button class="btn btn-secondary" style="padding: 4px 10px; font-size: 12px;" onclick="toggleTableFilter()">
+                        <i class="fa-solid fa-filter"></i> Next 24 Hours Only
+                    </button>
+                </div>
+                <div class="table-responsive">
+                    <table class="forecast-table">
+                        <thead>
+                            <tr>
+                                <th>Date & Time</th>
+                                <th>Condition</th>
+                                <th>Temp (°C)</th>
+                                <th>Feels Like</th>
+                                <th>Humidity</th>
+                                <th>Rain Prob (%)</th>
+                                <th>Rain Volume</th>
+                                <th>Wind</th>
+                                <th>Pressure</th>
+                            </tr>
+                        </thead>
+                        <tbody id="forecastTableBody">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Raw JSON Response Inspector -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">
+                        <i class="fa-solid fa-code"></i> Raw API Response Payload
+                    </span>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="btn btn-secondary" style="padding: 4px 10px; font-size: 12px;" onclick="copyRawJson()">
+                            <i class="fa-regular fa-copy"></i> Copy JSON
+                        </button>
+                        <button class="btn btn-secondary" style="padding: 4px 10px; font-size: 12px;" onclick="downloadJson()">
+                            <i class="fa-solid fa-download"></i> Download .json
+                        </button>
+                    </div>
+                </div>
+                <div class="code-container">
+                    <div class="code-toolbar">
+                        <span id="jsonMetaHeader">JSON Payload &bull; 0 KB</span>
+                        <span style="color: #64748b;">application/json</span>
+                    </div>
+                    <pre class="code-block" id="rawJsonBlock">// Response will appear here...</pre>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Constants & State
+        const STORAGE_KEY = 'krushi_drishti_owm_key';
+        let lastResponseData = null;
+        let lastApiUrl = '';
+        let showNext24hOnly = false;
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedKey = localStorage.getItem(STORAGE_KEY) || '4291e5ee29e71454cfb4b8fbee5aed7f';
+            if (savedKey) {
+                document.getElementById('apiKey').value = savedKey;
+            }
+        });
+
+        // Switch between city and coords
+        function switchQueryMode(mode) {
+            const tabCity = document.getElementById('tabCity');
+            const tabCoords = document.getElementById('tabCoords');
+            const cityInputMode = document.getElementById('cityInputMode');
+            const coordsInputMode = document.getElementById('coordsInputMode');
+
+            if (mode === 'city') {
+                tabCity.classList.add('active');
+                tabCoords.classList.remove('active');
+                cityInputMode.style.display = 'block';
+                coordsInputMode.style.display = 'none';
+            } else {
+                tabCoords.classList.add('active');
+                tabCity.classList.remove('active');
+                cityInputMode.style.display = 'none';
+                coordsInputMode.style.display = 'block';
+            }
+        }
+
+        function setCity(name) {
+            document.getElementById('cityName').value = name;
+            switchQueryMode('city');
+        }
+
+        function toggleKeyVisibility() {
+            const keyInput = document.getElementById('apiKey');
+            const eyeIcon = document.getElementById('eyeIcon');
+            if (keyInput.type === 'password') {
+                keyInput.type = 'text';
+                eyeIcon.classList.remove('fa-eye');
+                eyeIcon.classList.add('fa-eye-slash');
+            } else {
+                keyInput.type = 'password';
+                eyeIcon.classList.remove('fa-eye-slash');
+                eyeIcon.classList.add('fa-eye');
+            }
+        }
+
+        // HTML5 Geolocation detection
+        function useCurrentLocation() {
+            if (!navigator.geolocation) {
+                alert("Geolocation is not supported by your browser.");
+                return;
+            }
+
+            const btn = event.currentTarget;
+            const originalHtml = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Locating...';
+            btn.disabled = true;
+
+            navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                    const lat = pos.coords.latitude.toFixed(4);
+                    const lon = pos.coords.longitude.toFixed(4);
+                    document.getElementById('lat').value = lat;
+                    document.getElementById('lon').value = lon;
+                    switchQueryMode('coords');
+                    btn.innerHTML = originalHtml;
+                    btn.disabled = false;
+                },
+                (err) => {
+                    alert("Unable to retrieve location: " + err.message);
+                    btn.innerHTML = originalHtml;
+                    btn.disabled = false;
+                },
+                { timeout: 10000 }
+            );
+        }
+
+        // Execute API Test
+        async function runWeatherTest() {
+            const apiKey = document.getElementById('apiKey').value.trim();
+            if (!apiKey) {
+                showError("Missing API Key", "Please enter your OpenWeatherMap API key. If you don't have one, get a free key from openweathermap.org or click 'Load Mock Preview' above.", "Key Required");
+                return;
+            }
+
+            // Save key to local storage for convenience
+            localStorage.setItem(STORAGE_KEY, apiKey);
+
+            const isCityMode = document.getElementById('tabCity').classList.contains('active');
+            const units = document.getElementById('apiUnits').value;
+            const lang = document.getElementById('apiLang').value;
+            const endpointChoice = document.getElementById('apiEndpoint').value;
+
+            let queryParam = '';
+            if (isCityMode) {
+                const city = document.getElementById('cityName').value.trim();
+                if (!city) {
+                    showError("Missing City Name", "Please enter a city name to search.", "Validation");
+                    return;
+                }
+                queryParam = `q=${encodeURIComponent(city)}`;
+            } else {
+                const lat = document.getElementById('lat').value.trim();
+                const lon = document.getElementById('lon').value.trim();
+                if (!lat || !lon) {
+                    showError("Missing Coordinates", "Please provide both Latitude and Longitude.", "Validation");
+                    return;
+                }
+                queryParam = `lat=${lat}&lon=${lon}`;
+            }
+
+            // Reset UI states
+            hideError();
+            setLoadingState(true);
+
+            const startTime = performance.now();
+            const baseUrl = 'https://api.openweathermap.org/data/2.5';
+            const endpoint = (endpointChoice === 'weather') ? 'weather' : 'forecast';
+            const url = `${baseUrl}/${endpoint}?${queryParam}&units=${units}&lang=${lang}&appid=${apiKey}`;
+            lastApiUrl = url;
+
+            try {
+                const response = await fetch(url);
+                const elapsed = Math.round(performance.now() - startTime);
+                const data = await response.json();
+                lastResponseData = data;
+
+                updateStatusBar(response.status, response.statusText, elapsed, url);
+
+                if (!response.ok) {
+                    let tip = "Check your API key and city name.";
+                    if (response.status === 401) {
+                        tip = "Your API key is invalid or not yet active. New OpenWeather keys take 10 to 60 minutes to propagate. Please wait a bit if newly generated.";
+                    } else if (response.status === 404) {
+                        tip = "City not found. Try entering city with country code, e.g., 'Pune,IN' or use GPS coordinates.";
+                    } else if (response.status === 429) {
+                        tip = "Rate limit exceeded. Free tier allows up to 60 calls/minute.";
+                    }
+                    showError(`API Error ${response.status}: ${data.message || response.statusText}`, tip, "OpenWeather Response");
+                    setLoadingState(false);
+                    return;
+                }
+
+                // If the user selected 'both' and currently called forecast, fetch current weather as well for maximum accuracy
+                let currentWeatherData = null;
+                if (endpointChoice === 'both') {
+                    try {
+                        const weatherUrl = `${baseUrl}/weather?${queryParam}&units=${units}&lang=${lang}&appid=${apiKey}`;
+                        const weatherRes = await fetch(weatherUrl);
+                        if (weatherRes.ok) {
+                            currentWeatherData = await weatherRes.json();
+                        }
+                    } catch (e) {
+                        console.warn("Could not fetch secondary /weather endpoint", e);
+                    }
+                }
+
+                // Render Results
+                renderWeatherData(data, currentWeatherData, units);
+                setLoadingState(false);
+
+            } catch (networkError) {
+                const elapsed = Math.round(performance.now() - startTime);
+                updateStatusBar(0, "Network / CORS Failure", elapsed, url);
+                showError("Network Error", `Could not reach OpenWeatherMap API: ${networkError.message}. Check your internet connection or ad-blocker.`, "Fetch Failure");
+                setLoadingState(false);
+            }
+        }
+
+        // Render received data into cards
+        function renderWeatherData(data, currentWeatherData, units) {
+            document.getElementById('resultsSection').style.display = 'block';
+
+            const unitSymbol = units === 'imperial' ? '°F' : (units === 'standard' ? 'K' : '°C');
+            const speedSymbol = units === 'imperial' ? 'mph' : 'm/s';
+
+            let isForecastPayload = (data.list && Array.isArray(data.list));
+            let currentItem = isForecastPayload ? data.list[0] : data;
+            if (currentWeatherData) {
+                currentItem = currentWeatherData;
+            }
+
+            const cityInfo = isForecastPayload ? data.city : data;
+            const cityName = cityInfo.name || "Unknown City";
+            const country = (cityInfo.country || (cityInfo.sys && cityInfo.sys.country)) || "";
+            const coords = cityInfo.coord ? `${cityInfo.coord.lat.toFixed(2)}°N, ${cityInfo.coord.lon.toFixed(2)}°E` : "";
+
+            // Hero Card
+            document.getElementById('heroCityName').textContent = `${cityName}${country ? ', ' + country : ''}`;
+            document.getElementById('heroCoords').textContent = coords;
+            document.getElementById('heroTemp').textContent = `${Math.round(currentItem.main.temp)}${unitSymbol}`;
+            document.getElementById('heroDesc').textContent = currentItem.weather[0].description;
+            document.getElementById('heroFeelsLike').textContent = `Feels like ${Math.round(currentItem.main.feels_like)}${unitSymbol} (Min: ${Math.round(currentItem.main.temp_min)}${unitSymbol} | Max: ${Math.round(currentItem.main.temp_max)}${unitSymbol})`;
+
+            const iconCode = currentItem.weather[0].icon;
+            document.getElementById('heroIcon').src = `https://openweathermap.org/img/wn/${iconCode}@4x.png`;
+            document.getElementById('heroDateTime').textContent = new Date().toLocaleString();
+
+            // Metrics
+            document.getElementById('valHumidity').textContent = `${currentItem.main.humidity}%`;
+            document.getElementById('valWind').textContent = `${currentItem.wind.speed} ${speedSymbol}`;
+            document.getElementById('valWindDir').textContent = `${currentItem.wind.deg || 0}° (${getWindDirection(currentItem.wind.deg)})`;
+            document.getElementById('valPressure').textContent = `${currentItem.main.pressure} hPa`;
+            document.getElementById('valClouds').textContent = `${currentItem.clouds.all}%`;
+            document.getElementById('valVisibility').textContent = currentItem.visibility ? `${(currentItem.visibility / 1000).toFixed(1)} km` : 'N/A';
+
+            // Sunrise / Sunset
+            const sunriseUnix = cityInfo.sunrise || (cityInfo.sys && cityInfo.sys.sunrise);
+            const sunsetUnix = cityInfo.sunset || (cityInfo.sys && cityInfo.sys.sunset);
+            if (sunriseUnix && sunsetUnix) {
+                const sr = new Date(sunriseUnix * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                const ss = new Date(sunsetUnix * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                document.getElementById('valSun').textContent = `${sr} / ${ss}`;
+            } else {
+                document.getElementById('valSun').textContent = 'N/A';
+            }
+
+            // 5-Day Daily Grouping (if forecast payload exists)
+            if (isForecastPayload) {
+                document.getElementById('forecastDailyCard').style.display = 'block';
+                document.getElementById('forecastHourlyCard').style.display = 'block';
+                renderDailyForecast(data.list, unitSymbol);
+                renderHourlyTable(data.list, unitSymbol, speedSymbol);
+                generateAgroAdvisories(data.list, currentItem);
+            } else {
+                document.getElementById('forecastDailyCard').style.display = 'none';
+                document.getElementById('forecastHourlyCard').style.display = 'none';
+                generateAgroAdvisories([currentItem], currentItem);
+            }
+
+            // Raw JSON Block
+            const jsonString = JSON.stringify(data, null, 2);
+            document.getElementById('rawJsonBlock').textContent = jsonString;
+            document.getElementById('jsonMetaHeader').textContent = `JSON Payload • ${(jsonString.length / 1024).toFixed(1)} KB`;
+        }
+
+        // Render 5-Day summary grouped by date
+        function renderDailyForecast(list, unitSymbol) {
+            const container = document.getElementById('dailyForecastContainer');
+            container.innerHTML = '';
+
+            // Group by day (YYYY-MM-DD)
+            const daysMap = {};
+            list.forEach(item => {
+                const dateKey = item.dt_txt.split(' ')[0];
+                if (!daysMap[dateKey]) {
+                    daysMap[dateKey] = [];
+                }
+                daysMap[dateKey].push(item);
+            });
+
+            const dateKeys = Object.keys(daysMap).slice(0, 5); // 5 days
+            const todayStr = new Date().toISOString().split('T')[0];
+
+            dateKeys.forEach(dateStr => {
+                const items = daysMap[dateStr];
+                let minTemp = Infinity;
+                let maxTemp = -Infinity;
+                let maxPop = 0;
+                let midItem = items[Math.floor(items.length / 2)];
+
+                items.forEach(it => {
+                    if (it.main.temp_min < minTemp) minTemp = it.main.temp_min;
+                    if (it.main.temp_max > maxTemp) maxTemp = it.main.temp_max;
+                    if (it.pop && it.pop > maxPop) maxPop = it.pop;
+                });
+
+                const d = new Date(dateStr + 'T12:00:00');
+                const dayName = d.toLocaleDateString(undefined, { weekday: 'short' });
+                const formattedDate = d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+                const rainProbPercent = Math.round(maxPop * 100);
+
+                const isToday = (dateStr === todayStr);
+
+                const card = document.createElement('div');
+                card.className = `forecast-card ${isToday ? 'today' : ''}`;
+                card.innerHTML = `
+                    <div class="forecast-date">${formattedDate}</div>
+                    <div class="forecast-day-name">${isToday ? 'Today' : dayName}</div>
+                    <img class="forecast-icon" src="https://openweathermap.org/img/wn/${midItem.weather[0].icon}@2x.png" alt="${midItem.weather[0].description}">
+                    <div class="forecast-temps">
+                        <span>${Math.round(maxTemp)}${unitSymbol}</span>
+                        <span class="min-temp">${Math.round(minTemp)}${unitSymbol}</span>
+                    </div>
+                    <div class="forecast-condition">${midItem.weather[0].description}</div>
+                    ${rainProbPercent > 0 ? `<div class="forecast-rain-prob"><i class="fa-solid fa-droplet"></i> ${rainProbPercent}% rain</div>` : '<div style="height: 22px;"></div>'}
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Render 3-hour interval breakdown
+        function renderHourlyTable(list, unitSymbol, speedSymbol) {
+            const tbody = document.getElementById('forecastTableBody');
+            tbody.innerHTML = '';
+
+            const itemsToRender = showNext24hOnly ? list.slice(0, 8) : list;
+
+            itemsToRender.forEach(item => {
+                const dateObj = new Date(item.dt * 1000);
+                const timeString = dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                const dateString = dateObj.toLocaleDateString([], { month: 'short', day: 'numeric' });
+                const rainProb = item.pop ? Math.round(item.pop * 100) : 0;
+                const rainVol = (item.rain && item.rain['3h']) ? `${item.rain['3h']} mm` : '-';
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${dateString}</strong> &bull; ${timeString}</td>
+                    <td>
+                        <div style="display: flex; align-items: center; gap: 6px;">
+                            <img src="https://openweathermap.org/img/wn/${item.weather[0].icon}.png" width="30" height="30" alt="">
+                            <span style="text-transform: capitalize;">${item.weather[0].description}</span>
+                        </div>
+                    </td>
+                    <td><strong>${Math.round(item.main.temp)}${unitSymbol}</strong></td>
+                    <td style="color: var(--text-muted);">${Math.round(item.main.feels_like)}${unitSymbol}</td>
+                    <td>${item.main.humidity}%</td>
+                    <td>
+                        <span style="font-weight: 600; color: ${rainProb > 40 ? '#0284c7' : '#64748b'};">
+                            ${rainProb}%
+                        </span>
+                    </td>
+                    <td>${rainVol}</td>
+                    <td>${item.wind.speed} ${speedSymbol}</td>
+                    <td>${item.main.pressure} hPa</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function toggleTableFilter() {
+            showNext24hOnly = !showNext24hOnly;
+            event.currentTarget.innerHTML = showNext24hOnly 
+                ? '<i class="fa-solid fa-list"></i> Show All 40 Timesteps' 
+                : '<i class="fa-solid fa-filter"></i> Next 24 Hours Only';
+            if (lastResponseData && lastResponseData.list) {
+                const units = document.getElementById('apiUnits').value;
+                const unitSymbol = units === 'imperial' ? '°F' : '°C';
+                const speedSymbol = units === 'imperial' ? 'mph' : 'm/s';
+                renderHourlyTable(lastResponseData.list, unitSymbol, speedSymbol);
+            }
+        }
+
+        // Krushi Drishti Agricultural Advisory Generator
+        function generateAgroAdvisories(forecastList, currentItem) {
+            const container = document.getElementById('advisoryContainer');
+            container.innerHTML = '';
+
+            const advisories = [];
+
+            // Check upcoming rain in the next 24-48 hours
+            const next48h = forecastList.slice(0, 16);
+            let rainLikely = next48h.some(item => (item.pop && item.pop >= 0.5) || (item.rain && item.rain['3h'] > 1.0));
+            let maxWind = Math.max(...next48h.map(i => i.wind ? i.wind.speed : 0));
+            let maxTemp = Math.max(...next48h.map(i => i.main.temp_max));
+            let minTemp = Math.min(...next48h.map(i => i.main.temp_min));
+            let maxHumidity = Math.max(...next48h.map(i => i.main.humidity));
+
+            // 1. Spraying Advisory
+            if (rainLikely) {
+                advisories.push({
+                    type: 'danger',
+                    icon: 'fa-ban',
+                    title: 'Pesticide & Fertilizer Spraying: Unfavorable',
+                    text: 'Rainfall or high precipitation probability (>50%) detected within the next 24-48 hours. Postpone chemical spraying to avoid chemical runoff and wastage.'
+                });
+            } else if (maxWind > 7.0) { // > ~25 km/h
+                advisories.push({
+                    type: 'warn',
+                    icon: 'fa-wind',
+                    title: 'High Wind Drift Warning for Spraying',
+                    text: `Wind speeds expected up to ${maxWind} m/s. Spray early in the morning or when wind calms to prevent spray drift damage to neighboring crops.`
+                });
+            } else {
+                advisories.push({
+                    type: 'good',
+                    icon: 'fa-circle-check',
+                    title: 'Optimal Spraying Conditions',
+                    text: 'Low rain probability and moderate wind. Suitable window for foliar fertilizer and preventative fungicide spraying.'
+                });
+            }
+
+            // 2. Irrigation Advisory
+            if (rainLikely) {
+                advisories.push({
+                    type: 'warn',
+                    icon: 'fa-cloud-rain',
+                    title: 'Irrigation Management: Hold Water',
+                    text: 'Adequate rainfall is anticipated. Delay scheduled drip or flood irrigation to conserve electricity and avoid root waterlogging.'
+                });
+            } else if (maxTemp > 36) {
+                advisories.push({
+                    type: 'warn',
+                    icon: 'fa-temperature-high',
+                    title: 'Heat Stress & Evaporation Advisory',
+                    text: `High temperatures up to ${Math.round(maxTemp)}°C forecast. Ensure timely evening or early morning irrigation to mitigate plant heat stress.`
+                });
+            } else {
+                advisories.push({
+                    type: 'good',
+                    icon: 'fa-droplet',
+                    title: 'Standard Irrigation Schedule',
+                    text: 'Weather is balanced. Follow regular crop-stage water requirements.'
+                });
+            }
+
+            // 3. Fungal Disease Precaution
+            if (maxHumidity > 80 && maxTemp > 24 && maxTemp < 32) {
+                advisories.push({
+                    type: 'warn',
+                    icon: 'fa-biohazard',
+                    title: 'Fungal Disease Risk Alert',
+                    text: 'High humidity (>80%) combined with warm temperatures creates favorable incubation conditions for powdery mildew, blight, and leaf spot.'
+                });
+            }
+
+            // Render advisories into HTML
+            advisories.forEach(adv => {
+                const div = document.createElement('div');
+                div.className = `advisory-item adv-${adv.type}`;
+                div.innerHTML = `
+                    <i class="fa-solid ${adv.icon}"></i>
+                    <div>
+                        <strong>${adv.title}</strong>
+                        <div style="font-size: 12px; margin-top: 3px; opacity: 0.95;">${adv.text}</div>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // Status & Error Helpers
+        function updateStatusBar(status, statusText, timeMs, url) {
+            const statusBar = document.getElementById('statusBarSection');
+            statusBar.style.display = 'block';
+
+            const badge = document.getElementById('httpStatusBadge');
+            badge.className = 'status-badge';
+            if (status === 200) {
+                badge.classList.add('status-success');
+                badge.textContent = `HTTP 200 OK`;
+                document.getElementById('apiStatusBadge').innerHTML = '<i class="fa-solid fa-circle-check"></i> Connected';
+                document.getElementById('apiStatusBadge').className = 'header-badge' ;
+                document.getElementById('apiStatusBadge').style.background = 'rgba(74, 222, 128, 0.25)';
+            } else {
+                badge.classList.add('status-error');
+                badge.textContent = `HTTP ${status || 'ERR'} ${statusText}`;
+                document.getElementById('apiStatusBadge').innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Error';
+                document.getElementById('apiStatusBadge').style.background = 'rgba(239, 68, 68, 0.25)';
+            }
+
+            document.getElementById('responseTimeText').textContent = `Latency: ${timeMs} ms`;
+            document.getElementById('timestampText').textContent = new Date().toLocaleTimeString();
+            document.getElementById('urlCalledText').textContent = url.replace(/appid=[^&]+/, 'appid=KEY_HIDDEN_FOR_SECURITY');
+        }
+
+        function setLoadingState(isLoading) {
+            const btn = document.getElementById('fetchBtn');
+            if (isLoading) {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Calling OpenWeather API...';
+            } else {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-bolt"></i> Send API Test Request';
+            }
+        }
+
+        function showError(title, message, solution) {
+            const box = document.getElementById('errorAlertBox');
+            box.style.display = 'block';
+            document.getElementById('errorTitle').textContent = title;
+            document.getElementById('errorMessage').textContent = message;
+            document.getElementById('errorSolution').textContent = solution ? `Tip: ${solution}` : '';
+        }
+
+        function hideError() {
+            document.getElementById('errorAlertBox').style.display = 'none';
+        }
+
+        function copyApiUrl() {
+            if (!lastApiUrl) return;
+            navigator.clipboard.writeText(lastApiUrl).then(() => {
+                alert("API Request URL copied to clipboard!");
+            });
+        }
+
+        function copyRawJson() {
+            if (!lastResponseData) return;
+            navigator.clipboard.writeText(JSON.stringify(lastResponseData, null, 2)).then(() => {
+                alert("Raw JSON response copied to clipboard!");
+            });
+        }
+
+        function downloadJson() {
+            if (!lastResponseData) return;
+            const blob = new Blob([JSON.stringify(lastResponseData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `openweather-${Date.now()}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Wind Direction helper (Degrees to 16-point Compass)
+        function getWindDirection(deg) {
+            if (deg === undefined || deg === null) return 'N/A';
+            const compass = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"];
+            const index = Math.round((deg % 360) / 22.5);
+            return compass[index % 16];
+        }
+
+        // Mock data loader for immediate instant preview
+        function loadMockData() {
+            const mock = {
+                "cod": "200",
+                "message": 0,
+                "cnt": 40,
+                "city": {
+                    "id": 1259229,
+                    "name": "Pune",
+                    "coord": { "lat": 18.5204, "lon": 73.8567 },
+                    "country": "IN",
+                    "timezone": 19800,
+                    "sunrise": 1730682200,
+                    "sunset": 1730724120
+                },
+                "list": []
+            };
+
+            const conditions = [
+                { main: "Clear", desc: "clear sky", icon: "01d" },
+                { main: "Clouds", desc: "few clouds", icon: "02d" },
+                { main: "Clouds", desc: "scattered clouds", icon: "03d" },
+                { main: "Rain", desc: "light rain", icon: "10d" },
+                { main: "Clouds", desc: "broken clouds", icon: "04d" }
+            ];
+
+            const now = Date.now();
+            for (let i = 0; i < 40; i++) {
+                const ts = now + (i * 3 * 3600 * 1000);
+                const d = new Date(ts);
+                const c = conditions[i % conditions.length];
+                const temp = 22 + Math.sin(i / 3) * 8;
+                mock.list.push({
+                    "dt": Math.floor(ts / 1000),
+                    "main": {
+                        "temp": parseFloat(temp.toFixed(1)),
+                        "feels_like": parseFloat((temp + 1).toFixed(1)),
+                        "temp_min": parseFloat((temp - 2).toFixed(1)),
+                        "temp_max": parseFloat((temp + 2).toFixed(1)),
+                        "pressure": 1012,
+                        "humidity": 55 + (i % 30)
+                    },
+                    "weather": [{
+                        "id": 800,
+                        "main": c.main,
+                        "description": c.desc,
+                        "icon": c.icon
+                    }],
+                    "clouds": { "all": 25 },
+                    "wind": { "speed": parseFloat((3.5 + (i % 4)).toFixed(1)), "deg": 230 },
+                    "visibility": 10000,
+                    "pop": (i % 5 === 3) ? 0.65 : 0.1,
+                    "rain": (i % 5 === 3) ? { "3h": 2.4 } : undefined,
+                    "dt_txt": d.toISOString().replace('T', ' ').substring(0, 19)
+                });
+            }
+
+            lastResponseData = mock;
+            lastApiUrl = 'https://api.openweathermap.org/data/2.5/forecast?q=Pune,IN&units=metric&appid=MOCK_PREVIEW_KEY';
+            updateStatusBar(200, "OK (Mock Preview)", 42, lastApiUrl);
+            renderWeatherData(mock, null, 'metric');
+        }
+    </script>
+</body>
+
+</html>
+
